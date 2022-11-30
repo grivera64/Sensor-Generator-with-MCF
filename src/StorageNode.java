@@ -5,7 +5,7 @@ public class StorageNode extends SensorNode {
 
     public StorageNode(double x, double y) {
         super(x, y);
-        this.name = String.format("SN%2d", id++);
+        this.name = String.format("SN%02d", id++);
     }
 
     public String getName() {
@@ -18,10 +18,5 @@ public class StorageNode extends SensorNode {
             return false;
         }
         return this.getName().equals(sn.getName());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%10s(%.6f, %.6f)", this.getName(), this.getX(), this.getY());
     }
 }

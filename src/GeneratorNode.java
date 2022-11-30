@@ -5,7 +5,7 @@ public class GeneratorNode extends SensorNode {
 
     public GeneratorNode(double x, double y) {
         super(x, y);
-        this.name = String.format("DN%2d", id++);
+        this.name = String.format("DN%02d", id++);
     }
 
     public String getName() {
@@ -18,10 +18,5 @@ public class GeneratorNode extends SensorNode {
             return false;
         }
         return this.getName().equals(gn.getName());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%10s(%.6f, %.6f)", this.getName(), this.getX(), this.getY());
     }
 }

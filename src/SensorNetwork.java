@@ -1,8 +1,12 @@
+import com.sun.javafx.scene.shape.ArcHelper;
+
 import java.util.*;
 
 public class SensorNetwork implements Network {
 
     private List<SensorNode> nodes;
+    private List<SensorNode> gNodes;
+    private List<SensorNode> sNodes;
     private Map<SensorNode, Set<SensorNode>> graph;
 
     private final double width, length;
@@ -15,6 +19,11 @@ public class SensorNetwork implements Network {
         this.dataPacketCount = q;
         this.storageCapacity = m;
 
+        /* Used to separate each type of node for later use and retrieval */
+        this.gNodes = new ArrayList<>(p);
+        this.sNodes = new ArrayList<>(N - p);
+
+        /* Init the Sensor Network to allow basic operations on it */
         this.nodes = this.initNodes(N, p);
         this.graph = this.initGraph(this.nodes, tr);
     }
@@ -23,19 +32,24 @@ public class SensorNetwork implements Network {
         List<SensorNode> nodes = new ArrayList<>(nodeCount);
         Random rand = new Random();
 
+        /* Choose p random nodes to be Generator Nodes, the rest are Storage Nodes */
         int choice;
         double x, y;
+        SensorNode tmp;
         for (int index = 0; index < nodeCount; index++) {
             choice = rand.nextInt(1, 11);
             x = scaleVal(rand.nextDouble(this.width + 1));
             y = scaleVal(rand.nextDouble(this.length + 1));
 
             if (choice < 5 && p > 0) {
-                nodes.add(new GeneratorNode(x, y));
+                tmp = new GeneratorNode(x, y);
+                this.gNodes.add(tmp);
                 p--;
             } else {
-                nodes.add(new StorageNode(x, y));
+                tmp = new StorageNode(x, y);
+                this.sNodes.add(tmp);
             }
+            nodes.add(tmp);
         }
         return nodes;
     }
@@ -69,21 +83,51 @@ public class SensorNetwork implements Network {
 
     @Override
     public List<SensorNode> getSensorNodes() {
-        return null;
+        return new ArrayList<>(this.nodes);
     }
 
     @Override
     public List<SensorNode> getGeneratorNodes() {
-        return null;
+        return new ArrayList<>(this.gNodes);
     }
 
     @Override
     public List<SensorNode> getStorageNodes() {
-        return null;
+        return new ArrayList<>(this.sNodes);
     }
 
     @Override
     public boolean isConnected() {
-        return false;
+        return dfs(this.nodes);
+    }
+
+    @Override
+    public boolean isFeasible() {
+        int p = this.gNodes.size();
+        return p * this.dataPacketCount <= (this.nodes.size() - p) * this.storageCapacity;
+    }
+
+    private boolean dfs(List<SensorNode> nodes) {
+        Stack<SensorNode> stack = new Stack<>();
+        Set<SensorNode> seen = new HashSet<>();
+        stack.push(nodes.get(0));
+
+        SensorNode curr;
+        while (!stack.isEmpty()) {
+            curr = stack.pop();
+            seen.add(curr);
+
+            for (SensorNode neighbor : this.graph.getOrDefault(curr, Set.of())) {
+                if (!seen.contains(neighbor)) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+        return seen.size() == nodes.size();
+    }
+
+    @Override
+    public void saveAsCsInp(String fileName) {
+
     }
 }
