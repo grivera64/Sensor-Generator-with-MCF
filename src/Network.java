@@ -1,10 +1,15 @@
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface Network {
+    double getWidth();
+    double getLength();
     List<SensorNode> getSensorNodes();
     List<SensorNode> getGeneratorNodes();
     List<SensorNode> getStorageNodes();
     boolean isConnected();
     boolean isFeasible();
-    void saveAsCsInp(String fileName);
+    Map<SensorNode, Set<SensorNode>> getAdjacencyLists();    // Returns the connection of nodes (using ID)
+    void saveAsCsInp(String fileName, int srcId, int sinkId);
 }

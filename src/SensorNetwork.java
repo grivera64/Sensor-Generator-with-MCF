@@ -1,5 +1,6 @@
-import com.sun.javafx.scene.shape.ArcHelper;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class SensorNetwork implements Network {
@@ -74,11 +75,21 @@ public class SensorNetwork implements Network {
                 graph.putIfAbsent(node2, new HashSet<>());
                 if (node1.inRangeOf(node2, transmissionRange)) {
                     graph.get(node1).add(node2);
-                    graph.get(node2).add(node1);
+//                    graph.get(node2).add(node1); // This makes the graph a non-directed graph
                 }
             }
         }
         return graph;
+    }
+
+    @Override
+    public double getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public double getLength() {
+        return this.length;
     }
 
     @Override
@@ -107,6 +118,11 @@ public class SensorNetwork implements Network {
         return p * this.dataPacketCount <= (this.nodes.size() - p) * this.storageCapacity;
     }
 
+    @Override
+    public Map<SensorNode, Set<SensorNode>> getAdjacencyLists() {
+        return new HashMap<>(this.graph);
+    }
+
     private boolean dfs(List<SensorNode> nodes) {
         Stack<SensorNode> stack = new Stack<>();
         Set<SensorNode> seen = new HashSet<>();
@@ -127,7 +143,6 @@ public class SensorNetwork implements Network {
     }
 
     @Override
-    public void saveAsCsInp(String fileName) {
-
+    public void saveAsCsInp(String fileName, int srcId, int sinkId) {
     }
 }

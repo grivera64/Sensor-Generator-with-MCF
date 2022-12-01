@@ -1,11 +1,16 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.util.List;
 import java.util.Scanner;
 
-public class SensorToFlowNetworkMain {
+public class SensorToFlowNetworkMain extends Application {
     public static final Scanner keyboard = new Scanner(System.in);
 
+    public static Network network;
+
     public static void main(String[] args) {
-        Network network;
 
         do {
             network = createNetwork();
@@ -27,9 +32,13 @@ public class SensorToFlowNetworkMain {
         prettyPrint(network.getSensorNodes(), "Sensor Nodes");
         prettyPrint(network.getGeneratorNodes(), "Generator Nodes");
         prettyPrint(network.getStorageNodes(), "Storage Nodes");
+
         System.out.printf("Network is connected: %b\n", network.isConnected());
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
+//        network.saveAsCsInp("output_sensor_flow_diagram", -1, -1);
+
+        launch(args);
     }
 
     public static Network createNetwork() {
@@ -79,5 +88,17 @@ public class SensorToFlowNetworkMain {
             System.out.println(o);
         }
         System.out.println();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        final double width = 640;
+        final double height = 640;
+        primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
+        primaryStage.setWidth(width);
+        primaryStage.setHeight(height);
+        primaryStage.setScene(new Scene(new SensorNetworkGraph(network, width, height)));
+        primaryStage.setResizable(false);
+        primaryStage.show();
     }
 }
