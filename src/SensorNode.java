@@ -23,13 +23,17 @@ public abstract class SensorNode {
         return this.uuid;
     }
 
+    public double distanceTo(SensorNode o) {
+        return Math.sqrt(Math.pow(this.x - o.x, 2) + Math.pow(this.y - o.y, 2));
+    }
+
     public boolean inRangeOf(SensorNode o, double tr) {
-        return Math.sqrt(Math.pow(this.x - o.x, 2) + Math.pow(this.y - o.y, 2)) <= tr + 0.0001;
+        return this.distanceTo(o) <= tr + 0.0001;
     }
 
     @Override
     public String toString() {
-        return String.format("%-14s(%.6f, %.6f)", this.getName(), this.getX(), this.getY());
+        return String.format("%-14s(%.6f, %.6f) [Node %d]", this.getName(), this.getX(), this.getY(), this.getUuid());
     }
 
     public abstract String getName();
