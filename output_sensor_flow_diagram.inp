@@ -1,0 +1,11 @@
+c Min-Cost flow problem with 10 nodes and 17 arcs (edges)
+p min 10 17
+
+c Supply of 4 at node 5 (DN02)
+n 5 4
+
+c Demand of -4 at node 6 (SN04)
+n 6 -4
+
+c arc list follows
+c arc has <tail> <head> <capacity l.b.> <capacity u.b> <cost>

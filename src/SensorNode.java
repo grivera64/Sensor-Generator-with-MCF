@@ -32,7 +32,11 @@ public abstract class SensorNode {
     }
 
     public boolean inRangeOf(SensorNode o) {
-        return Math.sqrt(Math.pow(this.x - o.x, 2) + Math.pow(this.y - o.y, 2)) <= Math.min(this.tr, o.tr) + 0.0001;
+        return this.distanceTo(o) <= Math.min(this.tr, o.tr) + 0.0001;
+    }
+
+    public double distanceTo(SensorNode o) {
+        return Math.sqrt(Math.pow(this.x - o.x, 2) + Math.pow(this.y - o.y, 2));
     }
 
     @Override
