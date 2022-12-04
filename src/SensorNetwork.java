@@ -2,9 +2,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SensorNetwork implements Network {
+
+    private static final int dataPacketBitCount = 3200;
+    private static final double E_elec = 100e-9;
+    private static final double E_amp = 100e-12;
 
     private List<SensorNode> nodes;
     private List<SensorNode> gNodes;
@@ -250,12 +253,8 @@ public class SensorNetwork implements Network {
     }
 
     private int getCost(SensorNode from, SensorNode to, int k) {
-        final int elec = 100;
-        final int amp = 100;
-
-        double transmission = 2 * elec * k;
-        double receiving = amp * k * Math.pow(from.distanceTo(to), 2);
-        return (int) Math.ceil(transmission + receiving);
+        double cost = (2 * E_elec * k) + (E_amp * k * Math.pow(from.distanceTo(to), 2));
+        return (int) Math.round(cost * Math.pow(10, 6));
     }
 
     private int getEdgeCount() {
