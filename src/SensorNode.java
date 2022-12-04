@@ -51,7 +51,7 @@ public abstract class SensorNode {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof StorageNode sn)) {
+        if (!(o instanceof SensorNode sn)) {
             return false;
         }
         return this.getUuid() == sn.getUuid();

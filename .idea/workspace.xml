@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="106fa5a9-ee62-4e08-8f68-ce4c7589dd4b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetwork.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
