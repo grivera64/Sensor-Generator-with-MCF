@@ -1,22 +1,12 @@
 public class StorageNode extends SensorNode {
 
-    private static int id = 1;
-    private final String name;
+    private static int idCounter = 1;
 
-    public StorageNode(double x, double y) {
-        super(x, y);
-        this.name = String.format("SN%02d", id++);
+    public StorageNode(double x, double y, double tr) {
+        super(x, y, tr, String.format("SN%02d", idCounter++));
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof StorageNode sn)) {
-            return false;
-        }
-        return this.getName().equals(sn.getName());
+    public static void resetCounter() {
+        idCounter = 1;
     }
 }

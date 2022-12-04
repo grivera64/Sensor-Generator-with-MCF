@@ -1,12 +1,20 @@
 public abstract class SensorNode {
 
     private static int uuidCounter = 1;
-    private int uuid;
-    private final double x, y;
 
-    public SensorNode(double x, double y) {
+    private int uuid;
+    private final double x, y, tr;
+    private String name;
+
+    public SensorNode(double x, double y, double tr, String name) {
         this.x = x;
         this.y = y;
+        this.tr = tr;
+        this.name = name;
+        this.setUuid();
+    }
+
+    private void setUuid() {
         this.uuid = uuidCounter;
         uuidCounter++;
     }
@@ -27,8 +35,8 @@ public abstract class SensorNode {
         return Math.sqrt(Math.pow(this.x - o.x, 2) + Math.pow(this.y - o.y, 2));
     }
 
-    public boolean inRangeOf(SensorNode o, double tr) {
-        return this.distanceTo(o) <= tr + 0.0001;
+    public boolean inRangeOf(SensorNode o) {
+        return this.distanceTo(o) <= this.tr + 0.0001;
     }
 
     @Override
@@ -36,6 +44,19 @@ public abstract class SensorNode {
         return String.format("%-14s(%.6f, %.6f) [Node %d]", this.getName(), this.getX(), this.getY(), this.getUuid());
     }
 
-    public abstract String getName();
+    public String getName() {
+        return this.name;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof StorageNode sn)) {
+            return false;
+        }
+        return this.getUuid() == sn.getUuid();
+    }
+
+    public static void resetCounter() {
+        uuidCounter = 1;
+    }
 }

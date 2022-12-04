@@ -26,13 +26,18 @@ public class SensorNetwork implements Network {
         this.sNodes = new ArrayList<>(N - p);
 
         /* Init the Sensor Network to allow basic operations on it */
-        this.nodes = this.initNodes(N, p);
+        this.nodes = this.initNodes(N, p, tr);
         this.graph = this.initGraph(this.nodes, tr);
     }
 
-    private List<SensorNode> initNodes(int nodeCount, int p) {
+    private List<SensorNode> initNodes(int nodeCount, int p, double tr) {
         List<SensorNode> nodes = new ArrayList<>(nodeCount);
         Random rand = new Random();
+
+        /* Reset Counters (This is a temporary fix) */
+        SensorNode.resetCounter();
+        StorageNode.resetCounter();
+        GeneratorNode.resetCounter();
 
         /* Choose p random nodes to be Generator Nodes, the rest are Storage Nodes */
         int choice;
@@ -43,12 +48,12 @@ public class SensorNetwork implements Network {
             x = scaleVal(rand.nextDouble(this.width + 1));
             y = scaleVal(rand.nextDouble(this.length + 1));
 
-            if (choice < 5 && p > 0) {
-                tmp = new GeneratorNode(x, y);
+            if ((choice < 5 && p > 0) || nodeCount - index < p) {
+                tmp = new GeneratorNode(x, y, tr);
                 this.gNodes.add(tmp);
                 p--;
             } else {
-                tmp = new StorageNode(x, y);
+                tmp = new StorageNode(x, y, tr);
                 this.sNodes.add(tmp);
             }
             nodes.add(tmp);
@@ -74,7 +79,7 @@ public class SensorNetwork implements Network {
             for (int index2 = index1 + 1; index2 < nodes.size(); index2++) {
                 node2 = nodes.get(index2);
                 graph.putIfAbsent(node2, new HashSet<>());
-                if (node1.inRangeOf(node2, transmissionRange)) {
+                if (node1.inRangeOf(node2)) {
                     graph.get(node1).add(node2);
                     graph.get(node2).add(node1); // This makes the graph a non-directed graph
                 }
@@ -95,17 +100,17 @@ public class SensorNetwork implements Network {
 
     @Override
     public List<SensorNode> getSensorNodes() {
-        return new ArrayList<>(this.nodes);
+        return Collections.unmodifiableList(this.nodes);
     }
 
     @Override
     public List<SensorNode> getGeneratorNodes() {
-        return new ArrayList<>(this.gNodes);
+        return Collections.unmodifiableList(this.gNodes);
     }
 
     @Override
     public List<SensorNode> getStorageNodes() {
-        return new ArrayList<>(this.sNodes);
+        return Collections.unmodifiableList(this.sNodes);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class SensorNetwork implements Network {
 
     @Override
     public Map<SensorNode, Set<SensorNode>> getAdjacencyLists() {
-        return new HashMap<>(this.graph);
+        return Collections.unmodifiableMap(this.graph);
     }
 
     private boolean dfs(List<SensorNode> nodes) {
