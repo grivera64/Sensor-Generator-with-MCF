@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SensorNetwork implements Network {
 
@@ -208,5 +209,115 @@ public class SensorNetwork implements Network {
 
     @Override
     public void saveAsCsInp(String fileName, int srcId, int sinkId) {
+        final int supply = this.dataPacketCount * this.gNodes.size();
+        final int demand = -supply;
+        final int minFlow = 0;
+        final int maxFlow = this.dataPacketCount;
+
+        File file = new File(fileName + ".inp");
+        try (PrintWriter writer = new PrintWriter(file)) {
+            /* Header */
+            writer.printf("c Min-Cost flow problem with %d nodes and %d arcs (edges)\n",
+                    this.nodes.size(), this.getEdgeCount());
+            writer.printf("p min %d %d\n",
+                    this.nodes.size(), this.getEdgeCount());
+            writer.println();
+
+            /* Set s (source) and t (sink) nodes */
+            SensorNode source = this.gNodes.get(srcId - 1);
+            writer.printf("c Supply of %d at node %d (%s)\n", supply, source.getUuid(), source.getName());
+            writer.printf("n %d %d\n", source.getUuid(), supply);
+            writer.println();
+
+            SensorNode sink = this.sNodes.get(sinkId - 1);
+            writer.printf("c Demand of %d at node %d (%s)\n", demand, sink.getUuid(), sink.getName());
+            writer.printf("n %d %d\n", sink.getUuid(), demand);
+            writer.println();
+
+            /* Arcs */
+            writer.println("c arc list follows");
+            writer.println("c arc has <tail> <head> <capacity l.b.> <capacity u.b> <cost>");
+
+            /* Attempt 1 */
+
+//            Set<SensorNode> seen = new HashSet<>();
+//            SensorNode from;
+//            for (Map.Entry<SensorNode, Set<SensorNode>> entry : this.graph.entrySet()) {
+//                from = entry.getKey();
+//
+//                if (from.equals(sink)) {
+//                    continue;
+//                }
+//
+//                seen.add(from);
+//                for (SensorNode to : entry.getValue()) {
+//
+//                    if (to.equals(source)) {
+//                        continue;
+//                    }
+//
+//                    if (seen.contains(to)) {
+//                        continue;
+//                    }
+//
+//                    writer.printf("c %s <=> %s\n", from.getName(), to.getName());
+//                    writer.printf("a %-2d %-2d %-2d %-2d %-2d\n",
+//                            from.getUuid(),
+//                            to.getUuid(),
+//                            minFlow,
+//                            maxFlow,
+//                            (from.equals(source) || to.equals(sink)) ? 0 : this.getCost(from, to, this.dataPacketCount)
+//                    );
+//                }
+//            }
+
+            /* Attempt 2 */
+//            Queue<SensorNode> q = new ArrayDeque<>();
+//            Set<SensorNode> seen = new HashSet<>();
+//            seen.add(source);
+//
+//            Set<SensorNode> dataNodes = this.graph.getOrDefault(source, null)
+//                    .stream()
+//                    .filter(sensorNode -> sensorNode instanceof GeneratorNode)
+//                    .collect(Collectors.toSet());
+//            for (SensorNode to : dataNodes) {
+//                writer.printf("a %-2d %-2d %-2d %-2d %-2d\n", source.getUuid(), to.getUuid(), minFlow, maxFlow, 0);
+//                q.offer(to);
+//            }
+//
+//            SensorNode from;
+//            while (!q.isEmpty()) {
+//                from = q.poll();
+//
+//                if (seen.contains(from) || from.equals(sink)) {
+//                    continue;
+//                }
+//
+//                seen.add(from);
+//                for (SensorNode to : dataNodes) {
+//                    writer.printf("a %-2d %-2d %-2d %-2d %-2d\n",
+//                            from.getUuid(), to.getUuid(), minFlow, maxFlow,
+//                            this.getCost(from, to, this.dataPacketCount)
+//                    );
+//                    q.offer(to);
+//                }
+//            }
+            System.out.println("Saved file!");
+        } catch (IOException e) {
+            System.out.printf("ERROR: Failed to create %s.inp\n", fileName);
+        }
+    }
+
+    private int getCost(SensorNode from, SensorNode to, int k) {
+        final int elec = 100;
+        final int amp = 100;
+
+        double transmission = 2 * elec * k;
+        double receiving = amp * k * Math.pow(from.distanceTo(to), 2);
+        return (int) Math.ceil(transmission + receiving);
+    }
+
+    private int getEdgeCount() {
+        return (this.graph.values().stream().mapToInt(Set::size).sum() / 2) - 3;
     }
 }

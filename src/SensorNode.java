@@ -31,6 +31,7 @@ public abstract class SensorNode {
         return this.uuid;
     }
 
+
     public boolean inRangeOf(SensorNode o) {
         return this.distanceTo(o) <= Math.min(this.tr, o.tr) + 0.0001;
     }
