@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6ec5e9c3-7f83-4724-af6c-4217e5bceb2a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SensorNetworkGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetworkGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -41,7 +41,6 @@ public class SensorToFlowNetworkMain extends Application {
 
     public static Network generateNetwork() {
         Network network;
-
         do {
             network = createNetwork();
 
@@ -117,6 +116,55 @@ public class SensorToFlowNetworkMain extends Application {
             System.out.println(o);
         }
         System.out.println();
+    }
+
+    private static void highlightPath(Network network) {
+        String command;
+        SensorNode n1 = null;
+        SensorNode n2 = null;
+        while (true) {
+            while (true) {
+                System.out.print("Please enter the Data node to traverse from (Q to quit):\n> ");
+                command = keyboard.nextLine().trim();
+
+                if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
+                    System.out.println("Quitting...");
+                    System.exit(0);
+                }
+                else if (command.matches("^\\d+")) {
+                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command) - 1);
+                } else if (command.matches("DN\\d+")) {
+                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                } else {
+                    System.out.println("Invalid input! Please try again...\n");
+                    continue;
+                }
+                System.out.printf("Selected: %s\n", n1);
+                break;
+            }
+
+            while (true) {
+                System.out.print("Please enter the Sensor node to traverse to (Q to quit):\n> ");
+                command = keyboard.nextLine().trim();
+
+                if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
+                    System.out.println("Quitting...");
+                    System.exit(0);
+                } else if (command.matches("^\\d+")) {
+                    n2 = network.getStorageNodes().get(Integer.parseInt(command) - 1);
+                } else if (command.matches("SN\\d+")) {
+                    n2 = network.getStorageNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                } else {
+                    System.out.println("Invalid input! Please try again...\n");
+                    continue;
+                }
+                System.out.printf("Selected: %s\n", n2);
+                break;
+            }
+
+            guiGraph.resetHighlight();
+            guiGraph.highlightPath(n1, n2);
+        }
     }
 
     @Override
