@@ -12,6 +12,33 @@ public class SensorToFlowNetworkMain extends Application {
 
     public static void main(String[] args) {
 
+        System.out.println("Please enter an option (F)ile/(G)enerate/(Q)uit:");
+        System.out.print("(Q) > ");
+        int option = keyboard.nextLine().charAt(0);
+
+        switch (option) {
+            case 'F', 'f' -> network = readNetwork();
+            case 'G', 'g' -> network = generateNetwork();
+            default -> {
+                System.out.println("Thank you for using Sensor-Generator-with-MCF!");
+                System.exit(0);
+            }
+        }
+
+        prettyPrint(network.getSensorNodes(), "Sensor Nodes");
+        prettyPrint(network.getGeneratorNodes(), "Generator Nodes");
+        prettyPrint(network.getStorageNodes(), "Storage Nodes");
+
+        System.out.printf("Network is connected: %b\n", network.isConnected());
+        System.out.printf("Network is feasible: %b\n", network.isFeasible());
+
+//        network.saveAsCsInp("output_sensor_flow_diagram", -1, -1);
+
+        launch(args);
+    }
+
+    public static Network generateNetwork() {
+        Network network;
         do {
             network = createNetwork();
 
@@ -29,16 +56,7 @@ public class SensorToFlowNetworkMain extends Application {
             break;
         } while (true);
 
-        prettyPrint(network.getSensorNodes(), "Sensor Nodes");
-        prettyPrint(network.getGeneratorNodes(), "Generator Nodes");
-        prettyPrint(network.getStorageNodes(), "Storage Nodes");
-
-        System.out.printf("Network is connected: %b\n", network.isConnected());
-        System.out.printf("Network is feasible: %b\n", network.isFeasible());
-
-//        network.saveAsCsInp("output_sensor_flow_diagram", -1, -1);
-
-        launch(args);
+        return network;
     }
 
     public static Network createNetwork() {
@@ -79,6 +97,14 @@ public class SensorToFlowNetworkMain extends Application {
 
         System.out.println();
         return new SensorNetwork(width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount);
+    }
+
+    public static Network readNetwork() {
+        System.out.println("Please enter a file name:");
+        System.out.print("> ");
+        String fileName = keyboard.nextLine().trim();
+
+        return new SensorNetwork(fileName);
     }
 
     public static void prettyPrint(List<?> list, String title) {
