@@ -11,5 +11,5 @@ public interface Network {
     boolean isConnected();
     boolean isFeasible();
     Map<SensorNode, Set<SensorNode>> getAdjacencyLists();    // Returns the connection of nodes (using ID)
-    void saveAsCsInp(String fileName, int srcId, int sinkId);
+    void saveAsCsInp(String fileName);
 }
