@@ -35,18 +35,8 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.printf("Network is connected: %b\n", network.isConnected());
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
-        Thread t = new Thread(() -> launch(args));
-        t.start();
-
-        int srcId, sinkId;
-        System.out.print("Please enter the Source Node:\n> ");
-        srcId = keyboard.nextInt();
-        keyboard.nextLine();
-        System.out.print("Please enter the Sink Node:\n> ");
-        sinkId = keyboard.nextInt();
-        keyboard.nextLine();
-
-        network.saveAsCsInp("output_sensor_flow_diagram", srcId, sinkId);
+        network.saveAsCsInp("output_sensor_flow_diagram");
+        launch(args);
     }
 
     public static Network createNetwork() {
