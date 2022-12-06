@@ -5,6 +5,10 @@ import java.util.*;
 
 public class SensorNetwork implements Network {
 
+    private static final int dataPacketBitCount = 3200;
+    private static final double E_elec = 100e-9;
+    private static final double E_amp = 100e-12;
+
     private List<SensorNode> nodes;
     private List<SensorNode> gNodes;
     private List<SensorNode> sNodes;
@@ -26,7 +30,7 @@ public class SensorNetwork implements Network {
 
         /* Init the Sensor Network to allow basic operations on it */
         this.nodes = this.initNodes(N, p, tr);
-        this.graph = this.initGraph(this.nodes, tr);
+        this.graph = this.initGraph(this.nodes);
     }
 
     private List<SensorNode> initNodes(int nodeCount, int p, double tr) {
@@ -47,7 +51,7 @@ public class SensorNetwork implements Network {
             x = scaleVal(rand.nextDouble(this.width + 1));
             y = scaleVal(rand.nextDouble(this.length + 1));
 
-            if ((choice < 5 && p > 0) || nodeCount - index < p) {
+            if ((choice < 5 && p > 0) || nodeCount - index <= p) {
                 tmp = new GeneratorNode(x, y, tr);
                 this.gNodes.add(tmp);
                 p--;
@@ -64,7 +68,7 @@ public class SensorNetwork implements Network {
         return Math.floor(val * 10) / 10;
     }
 
-    private Map<SensorNode, Set<SensorNode>> initGraph(List<SensorNode> nodes, double transmissionRange) {
+    private Map<SensorNode, Set<SensorNode>> initGraph(List<SensorNode> nodes) {
         Map<SensorNode, Set<SensorNode>> graph = new HashMap<>();
 
         /* Create the adjacency graph */
@@ -80,7 +84,7 @@ public class SensorNetwork implements Network {
                 graph.putIfAbsent(node2, new HashSet<>());
                 if (node1.inRangeOf(node2)) {
                     graph.get(node1).add(node2);
-//                    graph.get(node2).add(node1); // This makes the graph a non-directed graph
+                    graph.get(node2).add(node1); // This makes the graph a non-directed graph
                 }
             }
         }
@@ -148,6 +152,105 @@ public class SensorNetwork implements Network {
     }
 
     @Override
-    public void saveAsCsInp(String fileName, int srcId, int sinkId) {
+    public void saveAsCsInp(String fileName) {
+        final int supply = this.dataPacketCount * this.gNodes.size();
+        final int demand = -supply;
+        final int minFlow = 0;
+        final int maxFlow = this.dataPacketCount;
+
+        File file = new File(fileName + ".inp");
+        try (PrintWriter writer = new PrintWriter(file)) {
+            /* Header */
+            writer.printf("c Min-Cost flow problem with %d nodes and %d arcs (edges)\n",
+                    this.nodes.size() + 2, this.getEdgeCount());
+            writer.printf("p min %d %d\n",
+                    this.nodes.size() + 2, this.getEdgeCount());
+            writer.println();
+
+            /* Set s (source) and t (sink) nodes */
+            writer.printf("c Supply of %d at node %d (\"Source\")\n", supply, 0);
+            writer.printf("n %d %d\n", 0, supply);
+            writer.println();
+
+            writer.printf("c Demand of %d at node %d (\"Sink\")\n", demand, this.nodes.size() + 1);
+            writer.printf("n %d %d\n", this.nodes.size() + 1, demand);
+            writer.println();
+
+            /* Arcs */
+            writer.println("c arc list follows");
+            writer.println("c arc has <tail> <head> <capacity l.b.> <capacity u.b> <cost>");
+
+            /* Path from Source to DN is always 0 cost (not represented in the network) */
+            for (SensorNode dn : this.gNodes) {
+                writer.printf("a %d %d %d %d %d\n", 0, dn.getUuid(), minFlow, maxFlow, 0);
+            }
+
+            /* Find all paths from DN#->SN# */
+            List<SensorNode> path;
+            int currCost;
+            for (SensorNode dn : this.gNodes) {
+                for (SensorNode sn : this.sNodes) {
+                    path = this.bfs(this.graph, dn, sn);
+                    currCost = 0;
+                    for (int i = 0; i < path.size() - 1; i++) {
+                        currCost += this.getCost(path.get(i), path.get(i + 1), dataPacketBitCount);
+                    }
+                    writer.printf("a %d %d %d %d %d\n",
+                            dn.getUuid(), sn.getUuid(), minFlow, maxFlow,
+                            currCost);
+                }
+            }
+
+            /* Path from SN to Sink is always 0 cost (not represented in the network) */
+            for (SensorNode sn : this.sNodes) {
+                writer.printf("a %d %d %d %d %d\n", sn.getUuid(), this.nodes.size() + 1, minFlow, maxFlow, 0);
+            }
+            System.out.println("Saved file!");
+        } catch (IOException e) {
+            System.out.printf("ERROR: Failed to create %s.inp\n", fileName);
+        }
+    }
+
+    private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
+        Queue<SensorNode> q = new ArrayDeque<>();
+        Set<SensorNode> seen = new HashSet<>();
+        Map<SensorNode, SensorNode> backPointers = new HashMap<>();
+        q.offer(start);
+
+        SensorNode curr;
+        while (!q.isEmpty()) {
+            curr = q.poll();
+
+            if (curr.equals(end)) {
+                break;
+            }
+
+            seen.add(curr);
+            for (SensorNode neighbor : graph.getOrDefault(curr, Set.of())) {
+                if (seen.contains(neighbor)) {
+                    continue;
+                }
+                q.offer(neighbor);
+                backPointers.put(neighbor, curr);
+            }
+        }
+
+        LinkedList<SensorNode> deque = new LinkedList<>();
+        curr = end;
+        while (curr != null) {
+            deque.push(curr);
+            curr = backPointers.getOrDefault(curr, null);
+        }
+
+        return deque;
+    }
+
+    private int getCost(SensorNode from, SensorNode to, int k) {
+        double cost = (2 * E_elec * k) + (E_amp * k * Math.pow(from.distanceTo(to), 2));
+        return (int) Math.round(cost * Math.pow(10, 6));
+    }
+
+    private int getEdgeCount() {
+        return this.sNodes.size() * this.gNodes.size() + this.sNodes.size() + this.gNodes.size();
     }
 }

@@ -29,15 +29,13 @@ public class SensorToFlowNetworkMain extends Application {
             break;
         } while (true);
 
-        prettyPrint(network.getSensorNodes(), "Sensor Nodes");
-        prettyPrint(network.getGeneratorNodes(), "Generator Nodes");
-        prettyPrint(network.getStorageNodes(), "Storage Nodes");
+        prettyPrint(network.getGeneratorNodes(), "Generator Nodes   Coordinates");
+        prettyPrint(network.getStorageNodes(), "Storage Nodes    Coordinates");
 
         System.out.printf("Network is connected: %b\n", network.isConnected());
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
-//        network.saveAsCsInp("output_sensor_flow_diagram", -1, -1);
-
+        network.saveAsCsInp("output_sensor_flow_diagram");
         launch(args);
     }
 

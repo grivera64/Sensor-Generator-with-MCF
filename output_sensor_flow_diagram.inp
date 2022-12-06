@@ -1,11 +1,46 @@
-c Min-Cost flow problem with 10 nodes and 17 arcs (edges)
-p min 10 17
+c Min-Cost flow problem with 12 nodes and 35 arcs (edges)
+p min 12 35
 
-c Supply of 4 at node 5 (DN02)
-n 5 4
+c Supply of 10 at node 0 ("Source")
+n 0 10
 
-c Demand of -4 at node 6 (SN04)
-n 6 -4
+c Demand of -10 at node 11 ("Sink")
+n 11 -10
 
 c arc list follows
 c arc has <tail> <head> <capacity l.b.> <capacity u.b> <cost>
+a 0 1 0 2 0
+a 0 2 0 2 0
+a 0 3 0 2 0
+a 0 7 0 2 0
+a 0 10 0 2 0
+a 1 4 0 2 3217
+a 1 5 0 2 641
+a 1 6 0 2 2570
+a 1 8 0 2 2567
+a 1 9 0 2 2568
+a 2 4 0 2 1293
+a 2 5 0 2 1290
+a 2 6 0 2 646
+a 2 8 0 2 1936
+a 2 9 0 2 1935
+a 3 4 0 2 3229
+a 3 5 0 2 645
+a 3 6 0 2 2582
+a 3 8 0 2 1291
+a 3 9 0 2 2578
+a 7 4 0 2 1292
+a 7 5 0 2 1286
+a 7 6 0 2 645
+a 7 8 0 2 3858
+a 7 9 0 2 1931
+a 10 4 0 2 1288
+a 10 5 0 2 648
+a 10 6 0 2 641
+a 10 8 0 2 3220
+a 10 9 0 2 1293
+a 4 11 0 2 0
+a 5 11 0 2 0
+a 6 11 0 2 0
+a 8 11 0 2 0
+a 9 11 0 2 0
