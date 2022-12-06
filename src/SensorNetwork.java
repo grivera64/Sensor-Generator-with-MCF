@@ -212,14 +212,18 @@ public class SensorNetwork implements Network {
     }
 
     private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
-        Queue<SensorNode> q = new ArrayDeque<>();
+        Queue<Pair<SensorNode, Integer>> q = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
         Set<SensorNode> seen = new HashSet<>();
         Map<SensorNode, SensorNode> backPointers = new HashMap<>();
-        q.offer(start);
+        q.offer(new Pair<>(start, 0));
 
+        Pair<SensorNode, Integer> currPair;
         SensorNode curr;
+        int value;
         while (!q.isEmpty()) {
-            curr = q.poll();
+            currPair = q.poll();
+            curr = currPair.getKey();
+            value = currPair.getValue();
 
             if (curr.equals(end)) {
                 break;
@@ -230,7 +234,7 @@ public class SensorNetwork implements Network {
                 if (seen.contains(neighbor)) {
                     continue;
                 }
-                q.offer(neighbor);
+                q.offer(new Pair<>(neighbor, value + this.getCost(curr, neighbor, dataPacketBitCount)));
                 backPointers.put(neighbor, curr);
             }
         }
