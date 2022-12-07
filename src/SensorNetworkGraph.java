@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,10 +13,13 @@ public class SensorNetworkGraph extends Pane {
 
     private final Canvas canvas;
     private final GraphicsContext gc;
+    private final Network network;
     private final double X_SCALE;
     private final double Y_SCALE;
+    private boolean isHighlighted;
 
     public SensorNetworkGraph(Network network, double width, double height) {
+        this.network = network;
         this.setWidth(width);
         this.setHeight(height);
 
@@ -91,8 +95,7 @@ public class SensorNetworkGraph extends Pane {
         for (Map.Entry<SensorNode, Set<SensorNode>> entry : network.getAdjacencyLists().entrySet()) {
             n1 = entry.getKey();
             for (SensorNode n2 : entry.getValue()) {
-                this.gc.moveTo(scaleX(n1.getX()), scaleY(n1.getY()));
-                this.gc.lineTo(scaleX(n2.getX()), scaleY(n2.getY()));
+                this.drawLine(n1, n2);
             }
         }
         this.gc.stroke();
@@ -100,19 +103,67 @@ public class SensorNetworkGraph extends Pane {
         this.gc.setTextAlign(TextAlignment.CENTER);
         this.gc.setTextBaseline(VPos.CENTER);
 
-        double x, y;
         for (SensorNode node : network.getSensorNodes()) {
             if (node instanceof GeneratorNode) {
                 this.gc.setStroke(Color.RED);
             } else {
                 this.gc.setStroke(Color.GREEN);
             }
-            x = scaleX(node.getX());
-            y = scaleY(node.getY());
-            this.gc.strokeOval(x - 4, y - 4, 8, 8);
-            this.gc.fillText(node.getName(), x, y - 10);
+            this.drawNode(node, 8, true);
         }
         this.gc.closePath();
+    }
+
+    private void drawNode(SensorNode node, double radius, boolean hasLabel) {
+        double x, y;
+        x = scaleX(node.getX());
+        y = scaleY(node.getY());
+        this.gc.strokeOval(x - 4, y - 4, radius, radius);
+
+        if (hasLabel) {
+            this.gc.fillText(node.getName(), x, y - (radius * 1.25));
+        }
+    }
+
+    private void drawLine(SensorNode from, SensorNode to) {
+        this.gc.moveTo(scaleX(from.getX()), scaleY(from.getY()));
+        this.gc.lineTo(scaleX(to.getX()), scaleY(to.getY()));
+    }
+
+    public void highlightPath(SensorNode from, SensorNode to) {
+        List<SensorNode> path = this.network.getMinCostPath(from, to);
+        System.out.printf("Highlighted Min-Cost Path: [%s]\n",
+                String.join(", ",
+                        path.stream().map(SensorNode::getName).toArray(CharSequence[]::new)
+                )
+        );
+
+        this.gc.beginPath();
+        this.gc.setStroke(Color.DARKORANGE);
+        this.gc.setLineWidth(2);
+
+        /* Highlight nodes */
+        for (SensorNode node : path) {
+            drawNode(node, 10, false);
+        }
+
+        /* Highlight the connections */
+        for (int i = 0; i < path.size() - 1; i++) {
+            this.drawLine(path.get(i), path.get(i + 1));
+        }
+        this.gc.stroke();
+        this.gc.closePath();
+
+        this.isHighlighted = true;
+    }
+
+    public void resetHighlight() {
+        if (this.isHighlighted) {
+            this.gc.clearRect(0, 0, this.getWidth(), this.getHeight());
+            this.drawAxis(this.network);
+            this.drawNetwork(this.network);
+        }
+        this.isHighlighted = false;
     }
 
     private double scaleX(double x) {

@@ -60,4 +60,9 @@ public abstract class SensorNode {
     public static void resetCounter() {
         uuidCounter = 1;
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
 }

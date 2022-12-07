@@ -7,10 +7,12 @@ import java.util.Scanner;
 
 public class SensorToFlowNetworkMain extends Application {
     public static final Scanner keyboard = new Scanner(System.in);
-
-    public static Network network;
+    public static final double guiWidth = 640;
+    public static final double guiHeight = 640;
+    public static SensorNetworkGraph guiGraph;
 
     public static void main(String[] args) {
+        Network network;
 
         System.out.println("Please enter an option (F)ile/(G)enerate/(Q)uit:");
         System.out.print("(Q) > ");
@@ -21,7 +23,7 @@ public class SensorToFlowNetworkMain extends Application {
             case 'G', 'g' -> network = generateNetwork();
             default -> {
                 System.out.println("Thank you for using Sensor-Generator-with-MCF!");
-                System.exit(0);
+                return;
             }
         }
 
@@ -39,6 +41,7 @@ public class SensorToFlowNetworkMain extends Application {
 
     public static Network generateNetwork() {
         Network network;
+
         do {
             network = createNetwork();
 
@@ -118,12 +121,10 @@ public class SensorToFlowNetworkMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final double width = 640;
-        final double height = 640;
         primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
-        primaryStage.setWidth(width);
-        primaryStage.setHeight(height);
-        primaryStage.setScene(new Scene(new SensorNetworkGraph(network, width, height)));
+        primaryStage.setWidth(guiWidth);
+        primaryStage.setHeight(guiHeight);
+        primaryStage.setScene(new Scene(guiGraph));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

@@ -11,5 +11,6 @@ public interface Network {
     boolean isConnected();
     boolean isFeasible();
     Map<SensorNode, Set<SensorNode>> getAdjacencyLists();    // Returns the connection of nodes (using ID)
+    List<SensorNode> getMinCostPath(SensorNode from, SensorNode to);
     void saveAsCsInp(String fileName);
 }
