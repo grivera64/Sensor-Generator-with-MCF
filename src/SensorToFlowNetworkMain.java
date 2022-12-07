@@ -7,10 +7,13 @@ import java.util.Scanner;
 
 public class SensorToFlowNetworkMain extends Application {
     public static final Scanner keyboard = new Scanner(System.in);
-
-    public static Network network;
+    public static final double guiWidth = 640;
+    public static final double guiHeight = 640;
+    public static SensorNetworkGraph guiGraph;
 
     public static void main(String[] args) {
+
+        Network network;
 
         do {
             network = createNetwork();
@@ -36,7 +39,59 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
         network.saveAsCsInp("output_sensor_flow_diagram");
-        launch(args);
+
+        guiGraph = new SensorNetworkGraph(network, guiWidth, guiHeight);
+        Thread t = new Thread(() -> launch(args));
+        t.start();
+
+        String command;
+        SensorNode n1 = null;
+        SensorNode n2 = null;
+        while (true) {
+            while (true) {
+                System.out.print("Please enter the Data node to traverse from (Q to quit):\n> ");
+                command = keyboard.nextLine().trim();
+
+                if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
+                    System.out.println("Quitting...");
+                    System.exit(0);
+                }
+                else if (command.matches("^\\d+")) {
+                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command) - 1);
+                } else if (command.matches("DN\\d+")) {
+                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                } else {
+                    System.out.println("Invalid input! Please try again...\n");
+                    continue;
+                }
+                System.out.printf("Selected: %s\n", n1);
+                break;
+            }
+
+            while (true) {
+                System.out.print("Please enter the Sensor node to traverse to (Q to quit):\n> ");
+                command = keyboard.nextLine().trim();
+
+                if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
+                    System.out.println("Quitting...");
+                    System.exit(0);
+                } else if (command.matches("^\\d+")) {
+                    n2 = network.getStorageNodes().get(Integer.parseInt(command) - 1);
+                } else if (command.matches("SN\\d+")) {
+                    n2 = network.getStorageNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                } else {
+                    System.out.println("Invalid input! Please try again...\n");
+                    continue;
+                }
+                System.out.printf("Selected: %s\n", n2);
+                break;
+            }
+
+            guiGraph.resetHighlight();
+            guiGraph.highlightPath(n1, n2);
+        }
+
+
     }
 
     public static Network createNetwork() {
@@ -90,12 +145,10 @@ public class SensorToFlowNetworkMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final double width = 640;
-        final double height = 640;
         primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
-        primaryStage.setWidth(width);
-        primaryStage.setHeight(height);
-        primaryStage.setScene(new Scene(new SensorNetworkGraph(network, width, height)));
+        primaryStage.setWidth(guiWidth);
+        primaryStage.setHeight(guiHeight);
+        primaryStage.setScene(new Scene(guiGraph));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
