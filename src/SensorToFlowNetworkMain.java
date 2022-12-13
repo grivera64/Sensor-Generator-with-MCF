@@ -43,6 +43,7 @@ public class SensorToFlowNetworkMain extends Application {
 
     public static Network generateNetwork() {
         Network network;
+
         do {
             network = createNetwork();
 
