@@ -31,6 +31,7 @@ public abstract class SensorNode {
         return this.uuid;
     }
 
+
     public boolean inRangeOf(SensorNode o) {
         return this.distanceTo(o) <= Math.min(this.tr, o.tr) + 0.0001;
     }
@@ -50,7 +51,7 @@ public abstract class SensorNode {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof StorageNode sn)) {
+        if (!(o instanceof SensorNode sn)) {
             return false;
         }
         return this.getUuid() == sn.getUuid();

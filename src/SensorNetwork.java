@@ -33,6 +33,65 @@ public class SensorNetwork implements Network {
         this.graph = this.initGraph(this.nodes);
     }
 
+    public SensorNetwork(String fileName) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            throw new IllegalArgumentException(String.format("File \"%s\" doesn't exist!", fileName));
+        }
+
+        try (Scanner fileScanner = new Scanner(file)) {
+            if (!fileScanner.hasNext()) {
+                throw new IllegalArgumentException(String.format("File \"%s\" is empty!", fileName));
+            }
+
+            this.width = fileScanner.nextDouble();
+            this.length = fileScanner.nextDouble();
+            fileScanner.nextLine();
+
+            this.dataPacketCount = fileScanner.nextInt();
+            this.storageCapacity = fileScanner.nextInt();
+            fileScanner.nextLine();
+
+            int N = fileScanner.nextInt();
+            int Tr = fileScanner.nextInt();
+            fileScanner.nextLine();
+
+            this.nodes = new ArrayList<>(N);
+            this.sNodes = new ArrayList<>(N);
+            this.gNodes = new ArrayList<>(N);
+
+            String[] lineArgs;
+            double x, y;
+            SensorNode node;
+            for (int i = 0; i < N; i++) {
+                lineArgs = fileScanner.nextLine().split(" ");
+                if (lineArgs.length != 3) {
+                    throw new IOException();
+                }
+
+                x = Double.parseDouble(lineArgs[1]);
+                y = Double.parseDouble(lineArgs[2]);
+
+                // Requires JDK 12+
+                node = switch (lineArgs[0]) {
+                    case "d" -> new GeneratorNode(x, y, Tr);
+                    case "s" -> new StorageNode(x, y, Tr);
+                    default -> throw new IOException();
+                };
+
+                this.nodes.add(node);
+                if (node instanceof GeneratorNode) {
+                    this.gNodes.add(node);
+                } else {
+                    this.sNodes.add(node);
+                }
+            }
+            this.graph = this.initGraph(this.nodes);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid file provided!");
+        }
+    }
+
     private List<SensorNode> initNodes(int nodeCount, int p, double tr) {
         List<SensorNode> nodes = new ArrayList<>(nodeCount);
         Random rand = new Random();
