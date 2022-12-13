@@ -1,10 +1,16 @@
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -178,5 +184,18 @@ public class SensorNetworkGraph extends Pane {
 //        Pixels -> Real
 //        return ((val - 40) / 50) * increment;
         return (50 * val) / scale + 40;
+    }
+
+    public void saveAsPng(String fileName) {
+        WritableImage writableImage = new WritableImage((int) this.getWidth() + 20, (int) this.getHeight() + 20);
+        this.snapshot(null, writableImage);
+
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+        try {
+            ImageIO.write(renderedImage, "png", new File(fileName));
+            System.out.printf("Saved sensor network in file \"%s\"\n", fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

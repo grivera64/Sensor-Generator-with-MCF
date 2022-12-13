@@ -127,5 +127,6 @@ public class SensorToFlowNetworkMain extends Application {
         primaryStage.setScene(new Scene(guiGraph));
         primaryStage.setResizable(false);
         primaryStage.show();
+        guiGraph.saveAsPng("sensor_network.png");
     }
 }
