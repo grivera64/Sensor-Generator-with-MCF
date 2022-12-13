@@ -86,7 +86,7 @@ public class SensorNetwork implements Network {
                     this.sNodes.add(node);
                 }
             }
-            this.graph = this.initGraph(this.nodes, Tr);
+            this.graph = this.initGraph(this.nodes);
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid file provided!");
         }

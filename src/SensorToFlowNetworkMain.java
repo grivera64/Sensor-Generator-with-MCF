@@ -119,6 +119,14 @@ public class SensorToFlowNetworkMain extends Application {
     }
 
     private static void highlightPath(Network network) {
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+
         String command;
         SensorNode n1 = null;
         SensorNode n2 = null;
