@@ -276,47 +276,34 @@ public class SensorNetwork implements Network {
     }
 
     private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
-        Queue<Pair<SensorNode, Integer>> q = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
-        Set<SensorNode> seen = new HashSet<>();
+        Queue<Tuple<SensorNode, Integer, SensorNode>> q = new PriorityQueue<>(Comparator.comparing(Tuple::getSecond));
         Map<SensorNode, SensorNode> backPointers = new HashMap<>();
-        Map<SensorNode, Integer> minCost = new HashMap<>();
+        q.offer(new Tuple<>(start, 0, null));
 
-        q.offer(new Pair<>(start, 0));
-        backPointers.put(start, null);
-
-        Pair<SensorNode, Integer> currPair;
-        SensorNode curr = null;
+        Tuple<SensorNode, Integer, SensorNode> currPair;
+        SensorNode curr;
+        SensorNode prev;
         int value;
         while (!q.isEmpty()) {
             currPair = q.poll();
-            curr = currPair.getKey();
-            value = currPair.getValue();
+            curr = currPair.getFirst();
+            value = currPair.getSecond();
+            prev = currPair.getThird();
 
-            if (seen.contains(curr)) {
-                continue;
+            if (!backPointers.containsKey(curr)) {
+                backPointers.put(curr, prev);
+                for (SensorNode neighbor : graph.getOrDefault(curr, Set.of())) {
+                    q.offer(new Tuple<>(neighbor, value + this.getCost(curr, neighbor, dataPacketBitCount), curr));
+                }
             }
 
             if (curr.equals(end)) {
                 break;
             }
-
-            seen.add(curr);
-            for (SensorNode neighbor : graph.getOrDefault(curr, Set.of())) {
-                if (seen.contains(neighbor)) {
-                    continue;
-                }
-
-                value += this.getCost(curr, neighbor, dataPacketBitCount);
-                q.offer(new Pair<>(neighbor, value));
-
-                if (!backPointers.containsKey(neighbor) || value <= minCost.get(neighbor)) {
-                    backPointers.put(neighbor, curr);
-                    minCost.put(neighbor, value);
-                }
-            }
         }
 
         LinkedList<SensorNode> deque = new LinkedList<>();
+        curr = end;
         while (curr != null) {
             deque.push(curr);
             curr = backPointers.getOrDefault(curr, null);

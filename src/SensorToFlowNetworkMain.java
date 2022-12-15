@@ -23,6 +23,7 @@ public class SensorToFlowNetworkMain extends Application {
             case 'G', 'g' -> network = generateNetwork();
             default -> {
                 System.out.println("Thank you for using Sensor-Generator-with-MCF!");
+                System.exit(0);
                 return;
             }
         }
@@ -39,6 +40,7 @@ public class SensorToFlowNetworkMain extends Application {
         Thread t = new Thread(() -> highlightPath(network));
         t.start();
         launch(args);
+        System.exit(0);
     }
 
     public static Network generateNetwork() {
