@@ -146,6 +146,7 @@ public class SensorToFlowNetworkMain extends Application {
                 if (command.matches("(?:[Cc][Ll][Ee][Aa][Rr]|[Cc])")) {
                     System.out.println("Highlight reset!");
                     guiGraph.resetHighlight();
+                    continue;
                 }
                 else if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
                     System.out.println("Quitting...");

@@ -107,8 +107,8 @@ public class SensorNetwork implements Network {
         SensorNode tmp;
         for (int index = 0; index < nodeCount; index++) {
             choice = rand.nextInt(1, 11);
-            x = scaleVal(rand.nextDouble(this.width + 1));
-            y = scaleVal(rand.nextDouble(this.length + 1));
+            x = scaleVal(rand.nextDouble(this.width + 0.0000001));
+            y = scaleVal(rand.nextDouble(this.length + 0.0000001));
 
             if ((choice < 5 && p > 0) || nodeCount - index <= p) {
                 tmp = new DataNode(x, y, tr);
