@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e3fbd3c9-7d19-4c7e-9f09-ac053452ba3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tuple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GeneratorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetwork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorNetworkGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetworkGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tuple.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,18 +32,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/river/IntelliJ-Workspace/Java Projects/Breaking Java",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/river/IntelliJ-Workspace/Java Projects/Breaking Java&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="SensorToFlowNetworkMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="SensorToFlowNetworkMain" />
@@ -69,6 +70,7 @@
       <workItem from="1671007422753" duration="182000" />
       <workItem from="1671007698060" duration="565000" />
       <workItem from="1671066024239" duration="4306000" />
+      <workItem from="1671513925417" duration="591000" />
     </task>
     <servers />
   </component>

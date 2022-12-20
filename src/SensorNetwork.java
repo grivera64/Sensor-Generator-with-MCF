@@ -5,7 +5,7 @@ import java.util.*;
 
 public class SensorNetwork implements Network {
 
-    private static final int dataPacketBitCount = 3200;
+    private static final int BITS_PER_PACKET = 3200;
     private static final double E_elec = 100e-9;
     private static final double E_amp = 100e-12;
 
@@ -74,13 +74,13 @@ public class SensorNetwork implements Network {
 
                 // Requires JDK 12+
                 node = switch (lineArgs[0]) {
-                    case "d" -> new GeneratorNode(x, y, Tr);
+                    case "d" -> new DataNode(x, y, Tr);
                     case "s" -> new StorageNode(x, y, Tr);
                     default -> throw new IOException();
                 };
 
                 this.nodes.add(node);
-                if (node instanceof GeneratorNode) {
+                if (node instanceof DataNode) {
                     this.gNodes.add(node);
                 } else {
                     this.sNodes.add(node);
@@ -99,7 +99,7 @@ public class SensorNetwork implements Network {
         /* Reset Counters (This is a temporary fix) */
         SensorNode.resetCounter();
         StorageNode.resetCounter();
-        GeneratorNode.resetCounter();
+        DataNode.resetCounter();
 
         /* Choose p random nodes to be Generator Nodes, the rest are Storage Nodes */
         int choice;
@@ -111,7 +111,7 @@ public class SensorNetwork implements Network {
             y = scaleVal(rand.nextDouble(this.length + 1));
 
             if ((choice < 5 && p > 0) || nodeCount - index <= p) {
-                tmp = new GeneratorNode(x, y, tr);
+                tmp = new DataNode(x, y, tr);
                 this.gNodes.add(tmp);
                 p--;
             } else {
@@ -257,7 +257,7 @@ public class SensorNetwork implements Network {
                     path = this.bfs(this.graph, dn, sn);
                     currCost = 0;
                     for (int i = 0; i < path.size() - 1; i++) {
-                        currCost += this.getCost(path.get(i), path.get(i + 1), dataPacketBitCount);
+                        currCost += this.getCost(path.get(i), path.get(i + 1));
                     }
                     writer.printf("a %d %d %d %d %d\n",
                             dn.getUuid(), sn.getUuid(), minFlow, maxFlow,
@@ -278,7 +278,7 @@ public class SensorNetwork implements Network {
     private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
         Queue<Tuple<SensorNode, Integer, SensorNode>> q = new PriorityQueue<>(Comparator.comparing(Tuple::getSecond));
         Map<SensorNode, SensorNode> backPointers = new HashMap<>();
-        q.offer(new Tuple<>(start, 0, null));
+        q.offer(Tuple.of(start, 0, null));
 
         Tuple<SensorNode, Integer, SensorNode> currPair;
         SensorNode curr;
@@ -293,7 +293,7 @@ public class SensorNetwork implements Network {
             if (!backPointers.containsKey(curr)) {
                 backPointers.put(curr, prev);
                 for (SensorNode neighbor : graph.getOrDefault(curr, Set.of())) {
-                    q.offer(new Tuple<>(neighbor, value + this.getCost(curr, neighbor, dataPacketBitCount), curr));
+                    q.offer(Tuple.of(neighbor, value + this.getCost(curr, neighbor), curr));
                 }
             }
 
@@ -312,12 +312,12 @@ public class SensorNetwork implements Network {
         return deque;
     }
 
-    private int getCost(SensorNode from, SensorNode to, int k) {
-        double cost = (2 * E_elec * k) + (E_amp * k * Math.pow(from.distanceTo(to), 2));
+    private int getCost(SensorNode from, SensorNode to) {
+        double cost = BITS_PER_PACKET * (2 * E_elec + E_amp * Math.pow(from.distanceTo(to), 2));
         return (int) Math.round(cost * Math.pow(10, 6));
     }
 
     private int getEdgeCount() {
-        return this.sNodes.size() * this.gNodes.size() + this.sNodes.size() + this.gNodes.size();
+        return 2 * this.sNodes.size() * this.gNodes.size();
     }
 }

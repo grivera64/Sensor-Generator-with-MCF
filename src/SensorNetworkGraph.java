@@ -110,7 +110,7 @@ public class SensorNetworkGraph extends Pane {
         this.gc.setTextBaseline(VPos.CENTER);
 
         for (SensorNode node : network.getSensorNodes()) {
-            if (node instanceof GeneratorNode) {
+            if (node instanceof DataNode) {
                 this.gc.setStroke(Color.RED);
             } else {
                 this.gc.setStroke(Color.GREEN);
