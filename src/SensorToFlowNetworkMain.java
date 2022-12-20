@@ -20,7 +20,10 @@ public class SensorToFlowNetworkMain extends Application {
 
         switch (option) {
             case 'F', 'f' -> network = readNetwork();
-            case 'G', 'g' -> network = generateNetwork();
+            case 'G', 'g' -> {
+                network = generateNetwork();
+                network.save("sensor_network.sn");
+            }
             default -> {
                 System.out.println("Thank you for using Sensor-Generator-with-MCF!");
                 System.exit(0);
@@ -34,7 +37,7 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.printf("Network is connected: %b\n", network.isConnected());
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
-        network.saveAsCsInp("output_sensor_flow_diagram");
+        network.saveAsCsInp("output_sensor_flow_diagram.inp");
         guiGraph = new SensorNetworkGraph(network, guiWidth, guiHeight);
 
         Thread t = new Thread(() -> highlightPath(network));
@@ -137,10 +140,14 @@ public class SensorToFlowNetworkMain extends Application {
         SensorNode n2 = null;
         while (true) {
             while (true) {
-                System.out.print("Please enter the Data node to traverse from (Q to quit):\n> ");
+                System.out.print("Please enter the Data node to traverse from (Q to quit/C to clear):\n> ");
                 command = keyboard.nextLine().trim();
 
-                if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
+                if (command.matches("(?:[Cc][Ll][Ee][Aa][Rr]|[Cc])")) {
+                    System.out.println("Highlight reset!");
+                    guiGraph.resetHighlight();
+                }
+                else if (command.matches("(?:[Qq][Uu][Ii][Tt]|[Qq])")) {
                     System.out.println("Quitting...");
                     System.exit(0);
                 }

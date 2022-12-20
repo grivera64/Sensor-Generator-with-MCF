@@ -196,6 +196,24 @@ public class SensorNetwork implements Network {
         return bfs(this.graph, from, to);
     }
 
+    @Override
+    public void save(String fileName) {
+        File file = new File(fileName);
+
+         try (PrintWriter pw = new PrintWriter(file)) {
+             pw.printf("%f %f\n", this.getWidth(), this.getLength());           // X, Y
+             pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity);  // q m
+             pw.printf("%d %d\n", this.nodes.size(), this.gNodes.size());       // N p
+
+             for (SensorNode n : this.nodes) {
+                 pw.printf("%s %f %f\n", (n instanceof DataNode) ? 'd' : 's', n.getX(), n.getY());
+             }
+             System.out.printf("Saved sensor network in file \"%s\"!\n", fileName);
+         } catch (IOException e) {
+             System.out.printf("ERROR: Failed to create \"%s\"!\n", fileName);
+         }
+    }
+
     private boolean dfs(List<SensorNode> nodes) {
         Stack<SensorNode> stack = new Stack<>();
         Set<SensorNode> seen = new HashSet<>();
@@ -222,7 +240,7 @@ public class SensorNetwork implements Network {
         final int minFlow = 0;
         final int maxFlow = this.dataPacketCount;
 
-        File file = new File(fileName + ".inp");
+        File file = new File(fileName);
         try (PrintWriter writer = new PrintWriter(file)) {
             /* Header */
             writer.printf("c Min-Cost flow problem with %d nodes and %d arcs (edges)\n",
@@ -269,9 +287,9 @@ public class SensorNetwork implements Network {
             for (SensorNode sn : this.sNodes) {
                 writer.printf("a %d %d %d %d %d\n", sn.getUuid(), this.nodes.size() + 1, minFlow, maxFlow, 0);
             }
-            System.out.printf("Saved flow network in file \"%s.inp\"!\n", fileName);
+            System.out.printf("Saved flow network in file \"%s\"!\n", fileName);
         } catch (IOException e) {
-            System.out.printf("ERROR: Failed to create %s.inp\n", fileName);
+            System.out.printf("ERROR: Failed to create %s\n", fileName);
         }
     }
 
