@@ -166,7 +166,7 @@ public class SensorNetwork implements Network {
     }
 
     @Override
-    public List<SensorNode> getGeneratorNodes() {
+    public List<SensorNode> getDataNodes() {
         return Collections.unmodifiableList(this.gNodes);
     }
 
@@ -187,7 +187,7 @@ public class SensorNetwork implements Network {
     }
 
     @Override
-    public Map<SensorNode, Set<SensorNode>> getAdjacencyLists() {
+    public Map<SensorNode, Set<SensorNode>> getAdjacencyList() {
         return Collections.unmodifiableMap(this.graph);
     }
 

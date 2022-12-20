@@ -28,7 +28,7 @@ public class SensorToFlowNetworkMain extends Application {
             }
         }
 
-        prettyPrint(network.getGeneratorNodes(), "Generator Nodes   Coordinates");
+        prettyPrint(network.getDataNodes(), "Generator Nodes   Coordinates");
         prettyPrint(network.getStorageNodes(), "Storage Nodes    Coordinates");
 
         System.out.printf("Network is connected: %b\n", network.isConnected());
@@ -145,9 +145,9 @@ public class SensorToFlowNetworkMain extends Application {
                     System.exit(0);
                 }
                 else if (command.matches("^\\d+")) {
-                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command) - 1);
+                    n1 = network.getDataNodes().get(Integer.parseInt(command) - 1);
                 } else if (command.matches("DN\\d+")) {
-                    n1 = network.getGeneratorNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                    n1 = network.getDataNodes().get(Integer.parseInt(command.substring(3)) - 1);
                 } else {
                     System.out.println("Invalid input! Please try again...\n");
                     continue;

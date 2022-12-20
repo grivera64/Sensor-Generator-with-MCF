@@ -98,7 +98,7 @@ public class SensorNetworkGraph extends Pane {
         this.gc.setStroke(Color.SKYBLUE);
 
         SensorNode n1;
-        for (Map.Entry<SensorNode, Set<SensorNode>> entry : network.getAdjacencyLists().entrySet()) {
+        for (Map.Entry<SensorNode, Set<SensorNode>> entry : network.getAdjacencyList().entrySet()) {
             n1 = entry.getKey();
             for (SensorNode n2 : entry.getValue()) {
                 this.drawLine(n1, n2);
