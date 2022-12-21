@@ -34,12 +34,12 @@ public class SensorNetworkGraph extends Pane {
 
         this.canvas = new Canvas(width - 40, height - 40);
         this.gc = this.canvas.getGraphicsContext2D();
-        this.drawAxis(network);
+        this.drawAxis();
         this.drawNetwork(network);
         this.getChildren().add(this.canvas);
     }
 
-    public void drawAxis(Network network) {
+    public void drawAxis() {
 
         this.gc.beginPath();
         this.gc.setStroke(Color.BLACK);
@@ -166,7 +166,7 @@ public class SensorNetworkGraph extends Pane {
     public void resetHighlight() {
         if (this.isHighlighted) {
             this.gc.clearRect(0, 0, this.getWidth(), this.getHeight());
-            this.drawAxis(this.network);
+            this.drawAxis();
             this.drawNetwork(this.network);
         }
         this.isHighlighted = false;
