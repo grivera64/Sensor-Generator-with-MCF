@@ -331,8 +331,7 @@ public class SensorNetwork implements Network {
     }
 
     private int getCost(SensorNode from, SensorNode to) {
-        double bits = this.dataPacketCount * BITS_PER_PACKET;
-        double cost = bits * (2 * E_elec + E_amp * Math.pow(from.distanceTo(to), 2));
+        double cost = BITS_PER_PACKET * (2 * E_elec + E_amp * Math.pow(from.distanceTo(to), 2));
         return (int) Math.round(cost * Math.pow(10, 6));
     }
 
