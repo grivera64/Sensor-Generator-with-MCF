@@ -56,7 +56,7 @@ cd src
 javac -p "${PATH_TO_FX}" --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
 ```
 
-> **Note**: Environment variable `PATH_TO_FX` should be set to the location of the `lib/` folder from your JavaFX install. i.e. `javafx15.0.0.1/lib/`
+> **Note**: Environment variable `PATH_TO_FX` should be set to the location of the `lib/` folder from your JavaFX install. i.e. `openjfx-15.0.0.1-sdk/lib/`
 > 
 > If you don't have your environment variable set up, you can replace the variable with the respective path manually.
 
