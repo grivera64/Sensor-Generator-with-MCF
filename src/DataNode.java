@@ -1,3 +1,8 @@
+/**
+ * Represents a Sensor Node in a Network that has overflow data packets to store.
+ *
+ * @see SensorNode
+ */
 public class DataNode extends SensorNode {
 
     private static int idCounter = 1;

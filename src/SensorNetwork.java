@@ -3,6 +3,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * An implementation of a Network that contains Data and Storage Sensor Nodes
+ * @see Network
+ */
 public class SensorNetwork implements Network {
 
     private static final int BITS_PER_PACKET = 3200;
@@ -18,6 +22,16 @@ public class SensorNetwork implements Network {
     private final int dataPacketCount;
     private final int storageCapacity;
 
+    /**
+     * Constructor to create a Sensor Network
+     * @param x the width of the network (in meters)
+     * @param y the length of the network (in meters)
+     * @param N the number of nodes
+     * @param tr the transmission range of the nodes (in meters)
+     * @param p the number of Data Nodes in the network
+     * @param q the number of data packets each Data Node has
+     * @param m the storage capacity each Storage nodes has
+     */
     public SensorNetwork(double x, double y, int N, double tr, int p, int q, int m) {
         this.width = x;
         this.length = y;
@@ -33,6 +47,25 @@ public class SensorNetwork implements Network {
         this.graph = this.initGraph(this.nodes);
     }
 
+    /**
+     * Copy constructor to create a Sensor Network from an .sn file.
+     *
+     * <p></p>
+     *
+     * The file must follow the following format:
+     * <p></p>
+     * width length
+     * <p>
+     * data_packets_per_node storage_capacity_per_node
+     * <p>
+     * total_nodes transmission_range
+     * <p>
+     * (d/s) id x y
+     * <p>
+     * ...
+     *
+     * @param fileName the path to the .sn file
+     */
     public SensorNetwork(String fileName) {
         File file = new File(fileName);
         if (!file.exists()) {
@@ -175,11 +208,23 @@ public class SensorNetwork implements Network {
         return Collections.unmodifiableList(this.sNodes);
     }
 
+    /**
+     * Tests whether all the nodes are directly or indirectly connected with each other.
+     *
+     * @return true if and only if all the nodes are directly or indirectly connected
+     * with each other; otherwise false
+     */
     @Override
     public boolean isConnected() {
         return dfs(this.nodes);
     }
 
+    /**
+     * Tests whether there is enough storage for all the overflow packets in the network.
+     *
+     * @return true if and only if there is enough storage for all the overflow packets in the network;
+     * otherwise false
+     */
     @Override
     public boolean isFeasible() {
         int p = this.gNodes.size();
@@ -191,11 +236,23 @@ public class SensorNetwork implements Network {
         return Collections.unmodifiableMap(this.graph);
     }
 
+    /**
+     * Returns the sensor nodes in the min-cost path between the from and to sensor nodes
+     *
+     * @param from the starting sensor node
+     * @param to the ending sensor node
+     * @return a list of the sensor nodes in the min-cost path between the from and to sensor nodes
+     */
     @Override
     public List<SensorNode> getMinCostPath(SensorNode from, SensorNode to) {
         return bfs(this.graph, from, to);
     }
 
+    /**
+     * Saves the network into a .sn file format.
+     *
+     * @param fileName the path to the file to save to
+     */
     @Override
     public void save(String fileName) {
         File file = new File(fileName);
@@ -233,6 +290,12 @@ public class SensorNetwork implements Network {
         return seen.size() == nodes.size();
     }
 
+    /**
+     * Saves the network in the <b>DIMAC</b> format
+     * that can be used for the min-cost flow program <a href="https://github.com/iveney/cs2">CS2</a>.
+     *
+     * @param fileName the path to the file to save to
+     */
     @Override
     public void saveAsCsInp(String fileName) {
         final int supply = this.dataPacketCount * this.gNodes.size();

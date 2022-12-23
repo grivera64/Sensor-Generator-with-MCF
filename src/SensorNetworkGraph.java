@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents the Sensor Network graph pane on the main stage.
+ * @see Pane javafx.scene.layout.Pane
+ */
 public class SensorNetworkGraph extends Pane {
 
     private final Canvas canvas;
@@ -24,6 +28,12 @@ public class SensorNetworkGraph extends Pane {
     private final double Y_SCALE;
     private boolean isHighlighted;
 
+    /**
+     * Creates the pane with the network on it.
+     * @param network
+     * @param width
+     * @param height
+     */
     public SensorNetworkGraph(Network network, double width, double height) {
         this.network = network;
         this.setWidth(width);
@@ -39,7 +49,7 @@ public class SensorNetworkGraph extends Pane {
         this.getChildren().add(this.canvas);
     }
 
-    public void drawAxis() {
+    private void drawAxis() {
 
         this.gc.beginPath();
         this.gc.setStroke(Color.BLACK);
@@ -93,7 +103,7 @@ public class SensorNetworkGraph extends Pane {
         this.gc.closePath();
     }
 
-    public void drawNetwork(Network network) {
+    private void drawNetwork(Network network) {
         this.gc.beginPath();
         this.gc.setStroke(Color.SKYBLUE);
 
@@ -136,6 +146,12 @@ public class SensorNetworkGraph extends Pane {
         this.gc.lineTo(scaleX(to.getX()), scaleY(to.getY()));
     }
 
+    /**
+     * Draws an orange path between the from and to Sensor Nodes that represents the min-cost path.
+     *
+     * @param from the starting Sensor Node
+     * @param to the ending Sensor Node
+     */
     public void highlightPath(SensorNode from, SensorNode to) {
         List<SensorNode> path = this.network.getMinCostPath(from, to);
         System.out.printf("Highlighted Min-Cost Path: [%s]\n",
@@ -163,6 +179,9 @@ public class SensorNetworkGraph extends Pane {
         this.isHighlighted = true;
     }
 
+    /**
+     * Resets the highlighted orange path.
+     */
     public void resetHighlight() {
         if (this.isHighlighted) {
             this.gc.clearRect(0, 0, this.getWidth(), this.getHeight());
@@ -186,6 +205,11 @@ public class SensorNetworkGraph extends Pane {
         return (50 * val) / scale + 40;
     }
 
+    /**
+     * Saves an image of the Pane
+     *
+     * @param fileName the path to the png file to save to
+     */
     public void saveAsPng(String fileName) {
         WritableImage writableImage = new WritableImage((int) this.getWidth() + 20, (int) this.getHeight() + 20);
         this.snapshot(null, writableImage);
