@@ -1,3 +1,9 @@
+/**
+ * Represents an immutable list of three elements.
+ * @param <T> first element
+ * @param <U> second element
+ * @param <V> third element
+ */
 public class Tuple<T, U, V> {
     private final T first;
     private final U second;

@@ -5,12 +5,19 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class for the program.
+ */
 public class SensorToFlowNetworkMain extends Application {
     public static final Scanner keyboard = new Scanner(System.in);
     public static final double guiWidth = 640;
     public static final double guiHeight = 640;
     public static SensorNetworkGraph guiGraph;
 
+    /**
+     * The entry point of the application.
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Network network;
 
@@ -46,30 +53,14 @@ public class SensorToFlowNetworkMain extends Application {
         System.exit(0);
     }
 
+    /**
+     * Asks for Network parameters input through stdin and generates a Network object.
+     * @return the generated network
+     * @see Network
+     */
     public static Network generateNetwork() {
         Network network;
 
-        do {
-            network = createNetwork();
-
-            if (!network.isConnected()) {
-                System.out.println("The Network is not connected! Please try again....");
-                System.out.println();
-                continue;
-            }
-
-            if (!network.isFeasible()) {
-                System.out.println("The Network is not feasible! Please try again....");
-                System.out.println();
-                continue;
-            }
-            break;
-        } while (true);
-
-        return network;
-    }
-
-    public static Network createNetwork() {
         System.out.println("Please enter the width (x) of the sensor network:");
         System.out.print("x = ");
         double width = keyboard.nextDouble();
@@ -106,9 +97,21 @@ public class SensorToFlowNetworkMain extends Application {
         keyboard.nextLine();
 
         System.out.println();
-        return new SensorNetwork(width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount);
+
+        do {
+            network = new SensorNetwork(
+                    width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount
+            );
+        } while(!(network.isConnected() && network.isFeasible()));
+
+        return network;
     }
 
+    /**
+     * Asks for an .sn file through stdin and generates a Network object.
+     * @return the generated network
+     * @see Network
+     */
     public static Network readNetwork() {
         System.out.println("Please enter a file name:");
         System.out.print("> ");
@@ -117,6 +120,11 @@ public class SensorToFlowNetworkMain extends Application {
         return new SensorNetwork(fileName);
     }
 
+    /**
+     * Pretty Prints out a list table with the provided title.
+     * @param list the list of elements to print
+     * @param title the title of the table
+     */
     public static void prettyPrint(List<?> list, String title) {
         System.out.println(title);
         System.out.println("=================================");
@@ -126,6 +134,12 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.println();
     }
 
+    /**
+     * Asks for a source and destination node to draw
+     * an orange path outline on the Network graph's GUI.
+     * @param network the network to draw on
+     * @see Network
+     */
     private static void highlightPath(Network network) {
 
         try {
@@ -188,6 +202,11 @@ public class SensorToFlowNetworkMain extends Application {
         }
     }
 
+    /**
+     * The entry point for a JavaFX application.
+     * @param primaryStage the stage of the JavaFX application
+     * @see Stage
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
