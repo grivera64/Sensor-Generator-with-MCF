@@ -399,6 +399,6 @@ public class SensorNetwork implements Network {
     }
 
     private int getEdgeCount() {
-        return 2 * this.sNodes.size() * this.gNodes.size();
+        return this.nodes.size() + this.sNodes.size() * this.gNodes.size();
     }
 }
