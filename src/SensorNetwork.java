@@ -21,6 +21,7 @@ public class SensorNetwork implements Network {
     private final double width, length;
     private final int dataPacketCount;
     private final int storageCapacity;
+    private final double transmissionRange;
 
     /**
      * Constructor to create a Sensor Network
@@ -37,13 +38,14 @@ public class SensorNetwork implements Network {
         this.length = y;
         this.dataPacketCount = q;
         this.storageCapacity = m;
+        this.transmissionRange = tr;
 
         /* Used to separate each type of node for later use and retrieval */
         this.gNodes = new ArrayList<>(p);
         this.sNodes = new ArrayList<>(N - p);
 
         /* Init the Sensor Network to allow basic operations on it */
-        this.nodes = this.initNodes(N, p, tr);
+        this.nodes = this.initNodes(N, p);
         this.graph = this.initGraph(this.nodes);
     }
 
@@ -79,6 +81,7 @@ public class SensorNetwork implements Network {
 
             this.width = fileScanner.nextDouble();
             this.length = fileScanner.nextDouble();
+            this.transmissionRange = fileScanner.nextDouble();
             fileScanner.nextLine();
 
             this.dataPacketCount = fileScanner.nextInt();
@@ -86,7 +89,6 @@ public class SensorNetwork implements Network {
             fileScanner.nextLine();
 
             int N = fileScanner.nextInt();
-            int Tr = fileScanner.nextInt();
             fileScanner.nextLine();
 
             this.nodes = new ArrayList<>(N);
@@ -107,8 +109,8 @@ public class SensorNetwork implements Network {
 
                 // Requires JDK 12+
                 node = switch (lineArgs[0]) {
-                    case "d" -> new DataNode(x, y, Tr);
-                    case "s" -> new StorageNode(x, y, Tr);
+                    case "d" -> new DataNode(x, y, this.transmissionRange);
+                    case "s" -> new StorageNode(x, y, this.transmissionRange);
                     default -> throw new IOException();
                 };
 
@@ -125,7 +127,7 @@ public class SensorNetwork implements Network {
         }
     }
 
-    private List<SensorNode> initNodes(int nodeCount, int p, double tr) {
+    private List<SensorNode> initNodes(int nodeCount, int p) {
         List<SensorNode> nodes = new ArrayList<>(nodeCount);
         Random rand = new Random();
 
@@ -140,24 +142,20 @@ public class SensorNetwork implements Network {
         SensorNode tmp;
         for (int index = 0; index < nodeCount; index++) {
             choice = rand.nextInt(1, 11);
-            x = scaleVal(rand.nextDouble(this.width + 0.0000001));
-            y = scaleVal(rand.nextDouble(this.length + 0.0000001));
+            x = this.width * rand.nextDouble();
+            y = this.length * rand.nextDouble();
 
             if ((choice < 5 && p > 0) || nodeCount - index <= p) {
-                tmp = new DataNode(x, y, tr);
+                tmp = new DataNode(x, y, this.transmissionRange);
                 this.gNodes.add(tmp);
                 p--;
             } else {
-                tmp = new StorageNode(x, y, tr);
+                tmp = new StorageNode(x, y, this.transmissionRange);
                 this.sNodes.add(tmp);
             }
             nodes.add(tmp);
         }
         return nodes;
-    }
-
-    private double scaleVal(double val) {
-        return Math.floor(val * 10) / 10;
     }
 
     private Map<SensorNode, Set<SensorNode>> initGraph(List<SensorNode> nodes) {
@@ -236,6 +234,11 @@ public class SensorNetwork implements Network {
         return Collections.unmodifiableMap(this.graph);
     }
 
+    @Override
+    public int calculateMinCost(SensorNode from, SensorNode to) {
+        return this.calculateCostOfPath(this.getMinCostPath(from, to));
+    }
+
     /**
      * Returns the sensor nodes in the min-cost path between the from and to sensor nodes
      *
@@ -249,6 +252,20 @@ public class SensorNetwork implements Network {
     }
 
     /**
+     * Calculates the cost of a given path.
+     * @param path the path between two sensor nodes
+     * @return the cost of the given path
+     */
+    @Override
+    public int calculateCostOfPath(List<SensorNode> path) {
+        int currCost = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            currCost += this.getCost(path.get(i), path.get(i + 1));
+        }
+        return currCost;
+    }
+
+    /**
      * Saves the network into a .sn file format.
      *
      * @param fileName the path to the file to save to
@@ -258,7 +275,7 @@ public class SensorNetwork implements Network {
         File file = new File(fileName);
 
          try (PrintWriter pw = new PrintWriter(file)) {
-             pw.printf("%f %f\n", this.getWidth(), this.getLength());           // X, Y
+             pw.printf("%f %f %f\n", this.getWidth(), this.getLength(), this.transmissionRange);   // X, Y, Tr
              pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity);  // q m
              pw.printf("%d %d\n", this.nodes.size(), this.gNodes.size());       // N p
 
@@ -336,13 +353,8 @@ public class SensorNetwork implements Network {
             for (SensorNode dn : this.gNodes) {
                 for (SensorNode sn : this.sNodes) {
                     path = this.bfs(this.graph, dn, sn);
-                    currCost = 0;
-                    for (int i = 0; i < path.size() - 1; i++) {
-                        currCost += this.getCost(path.get(i), path.get(i + 1));
-                    }
-                    writer.printf("a %d %d %d %d %d\n",
-                            dn.getUuid(), sn.getUuid(), minFlow, maxFlow,
-                            currCost);
+                    currCost = this.calculateCostOfPath(path);
+                    writer.printf("a %d %d %d %d %d\n", dn.getUuid(), sn.getUuid(), minFlow, maxFlow, currCost);
                 }
             }
 
