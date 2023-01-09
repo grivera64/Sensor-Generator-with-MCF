@@ -98,11 +98,20 @@ public class SensorToFlowNetworkMain extends Application {
 
         System.out.println();
 
+        int attempts = 0;
         do {
             network = new SensorNetwork(
                     width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount
             );
-        } while(!(network.isConnected() && network.isFeasible()));
+
+            if (!network.isFeasible() || attempts > nodeCount * 1000) {
+                System.out.println("Invalid network parameters! Please re-run the program.");
+                System.out.println("Exiting the program...");
+                System.exit(0);
+            }
+            attempts++;
+
+        } while(!(network.isConnected()));
 
         return network;
     }

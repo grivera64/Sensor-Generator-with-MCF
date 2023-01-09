@@ -154,11 +154,12 @@ public class SensorNetworkGraph extends Pane {
      */
     public void highlightPath(SensorNode from, SensorNode to) {
         List<SensorNode> path = this.network.getMinCostPath(from, to);
-        System.out.printf("Highlighted Min-Cost Path: [%s]\n",
-                String.join(", ",
+        System.out.printf("Highlighted Min-Cost Path: %s\n",
+                String.join(" -> ",
                         path.stream().map(SensorNode::getName).toArray(CharSequence[]::new)
                 )
         );
+        System.out.printf("Cost of Path: %d micro J\n", this.network.calculateCostOfPath(path));
 
         this.gc.beginPath();
         this.gc.setStroke(Color.DARKORANGE);
