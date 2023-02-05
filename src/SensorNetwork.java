@@ -91,6 +91,10 @@ public class SensorNetwork implements Network {
             int N = fileScanner.nextInt();
             fileScanner.nextLine();
 
+            SensorNode.resetCounter();
+            StorageNode.resetCounter();
+            DataNode.resetCounter();
+
             this.nodes = new ArrayList<>(N);
             this.sNodes = new ArrayList<>(N);
             this.gNodes = new ArrayList<>(N);
