@@ -19,8 +19,8 @@ public class SensorNetwork implements Network {
     private Map<SensorNode, Set<SensorNode>> graph;
 
     private final double width, length;
-    private final int dataPacketCount;
-    private final int storageCapacity;
+    private int dataPacketCount;
+    private int storageCapacity;
     private final double transmissionRange;
 
     /**
@@ -364,7 +364,8 @@ public class SensorNetwork implements Network {
 
             /* Path from SN to Sink is always 0 cost (not represented in the network) */
             for (SensorNode sn : this.sNodes) {
-                writer.printf("a %d %d %d %d %d\n", sn.getUuid(), this.nodes.size() + 1, minFlow, maxFlow, 0);
+                writer.printf("a %d %d %d %d %d\n",
+                        sn.getUuid(), this.nodes.size() + 1, minFlow, this.storageCapacity, 0);
             }
             System.out.printf("Saved flow network in file \"%s\"!\n", fileName);
         } catch (IOException e) {
@@ -416,5 +417,13 @@ public class SensorNetwork implements Network {
 
     private int getEdgeCount() {
         return this.nodes.size() + this.sNodes.size() * this.gNodes.size();
+    }
+
+    public void setOverflowPackets(int overflowPackets) {
+        this.dataPacketCount = overflowPackets;
+    }
+
+    public void setStorageCapacity(int storageCapacity) {
+        this.storageCapacity = storageCapacity;
     }
 }
