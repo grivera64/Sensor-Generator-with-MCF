@@ -1,7 +1,7 @@
 # Sensor-Generator-with-MCF
 
 ---
-Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
+Sensor com.grivera.generator.Network generator and visualizer for CS2 Min-Cost Flow input.
 
 ## Table of Contents
 
@@ -9,8 +9,8 @@ Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
 - [About](#about)
 - [Setup](#setup)
 - [Example](#example)
-  - [Terminal Output](#terminal-output) 
-  - [Generated Sensor Network](#generated-sensor-network)
+  - [Terminal Output](#terminal-output)
+  - [Generated Sensor com.grivera.generator.Network](#generated-sensor-network)
   - [Min-cost Path from DN03 to SN01](#min-cost-path-from-dn03-to-sn01)
   - [output_sensor_flow_diagram.inp](#outputsensorflowdiagraminp)
 - [Author](#author)
@@ -36,7 +36,7 @@ This program can also be used to run different strategies for sending data packe
 ### 1. Clone the Repository
 
 Open a command line or terminal instance and enter the following command:
-```shell
+```sh
 git clone https://github.com/grivera64/Sensor-Generator-with-MCF.git
 ```
 
@@ -45,32 +45,43 @@ from GitHub [here](https://github.com/grivera64/Sensor-Generator-with-MCF/archiv
 
 ### 2. Change directories into the source folder.
 
-```shell
+```sh
 cd Sensor-Generator-with-MCF
 cd src
 ```
 
 ### 3. Compile using javac
 
-```shell
-javac -p "${PATH_TO_FX}" --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
+Windows
+```bat
+javac -p "%PATH_TO_FX%;." --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
+```
+
+Mac/Linux
+```sh
+javac -p "${PATH_TO_FX};." --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
 ```
 
 > **Note**: Environment variable `PATH_TO_FX` should be set to the location of the `lib/` folder from your JavaFX install. i.e. `openjfx-15.0.0.1-sdk/lib/`
-> 
+>
 > If you don't have your environment variable set up, you can replace the variable with the respective path manually.
 
 ### 4. Change directories into the binaries folder
 
-```shell
+```sh
 cd ..
 cd bin
 ```
 
 ### 5. Run the program
+Windows
+```sh
+java -p "%PATH_TO_FX%;." --add-modules javafx.controls,javafx.graphics,javafx.swing SensorToFlowNetworkMain 
+```
 
-```shell
-java -p "${PATH_TO_FX}" --add-modules javafx.controls,javafx.graphics,javafx.swing SensorToFlowNetworkMain 
+Mac/Linux
+```sh
+java -p "${PATH_TO_FX};." --add-modules javafx.controls,javafx.graphics,javafx.swing SensorToFlowNetworkMain 
 ```
 
 ## Example
@@ -113,13 +124,13 @@ SN03          (9.000000, 8.500000) [4]
 SN04          (3.400000, 9.900000) [6]
 SN05          (0.700000, 5.500000) [7]
 
-Network is connected: true
-Network is feasible: true
+com.grivera.generator.Network is connected: true
+com.grivera.generator.Network is feasible: true
 Saved flow network in file "output_sensor_flow_diagram.inp"!
 Saved sensor network in file "sensor_network.png"
 ```
 
-### Generated Sensor Network
+### Generated Sensor com.grivera.generator.Network
 
 ![(sensor_network.jpg)](res/sensor_network.jpg)
 

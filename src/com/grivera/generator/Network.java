@@ -1,9 +1,11 @@
+package com.grivera.generator;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents the basis of a Network with Data and Storage Nodes
+ * Represents the basis of a com.grivera.generator.Network with Data and Storage Nodes
  */
 public interface Network {
     double getWidth();

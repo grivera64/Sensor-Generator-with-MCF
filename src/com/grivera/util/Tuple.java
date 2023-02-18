@@ -1,3 +1,5 @@
+package com.grivera.util;
+
 /**
  * Represents an immutable list of three elements.
  *

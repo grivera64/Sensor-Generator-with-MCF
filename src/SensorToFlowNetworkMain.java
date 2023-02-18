@@ -1,3 +1,7 @@
+import com.grivera.generator.Network;
+import com.grivera.generator.SensorNetwork;
+import com.grivera.generator.SensorNetworkGraph;
+import com.grivera.generator.SensorNode;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -54,13 +58,11 @@ public class SensorToFlowNetworkMain extends Application {
     }
 
     /**
-     * Asks for Network parameters input through stdin and generates a Network object.
+     * Asks for com.grivera.generator.Network parameters input through stdin and generates a com.grivera.generator.Network object.
      * @return the generated network
      * @see Network
      */
     public static Network generateNetwork() {
-        Network network;
-
         System.out.println("Please enter the width (x) of the sensor network:");
         System.out.print("x = ");
         double width = keyboard.nextDouble();
@@ -101,7 +103,7 @@ public class SensorToFlowNetworkMain extends Application {
     }
 
     /**
-     * Asks for an .sn file through stdin and generates a Network object.
+     * Asks for an .sn file through stdin and generates a com.grivera.generator.Network object.
      * @return the generated network
      * @see Network
      */
@@ -129,7 +131,7 @@ public class SensorToFlowNetworkMain extends Application {
 
     /**
      * Asks for a source and destination node to draw
-     * an orange path outline on the Network graph's GUI.
+     * an orange path outline on the com.grivera.generator.Network graph's GUI.
      * @param network the network to draw on
      * @see Network
      */
