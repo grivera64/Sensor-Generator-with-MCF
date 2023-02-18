@@ -95,25 +95,9 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.print("m = ");
         int storageCount = keyboard.nextInt();
         keyboard.nextLine();
-
         System.out.println();
 
-        int attempts = 0;
-        do {
-            network = new SensorNetwork(
-                    width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount
-            );
-
-            if (!network.isFeasible() || attempts > nodeCount * 1000) {
-                System.out.println("Invalid network parameters! Please re-run the program.");
-                System.out.println("Exiting the program...");
-                System.exit(0);
-            }
-            attempts++;
-
-        } while(!(network.isConnected()));
-
-        return network;
+        return SensorNetwork.of(width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount);
     }
 
     /**
@@ -126,7 +110,7 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.print("> ");
         String fileName = keyboard.nextLine().trim();
 
-        return new SensorNetwork(fileName);
+        return SensorNetwork.from(fileName);
     }
 
     /**

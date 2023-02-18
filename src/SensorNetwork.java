@@ -14,9 +14,11 @@ public class SensorNetwork implements Network {
     private static final double E_amp = 100e-12;
 
     private List<SensorNode> nodes;
-    private List<SensorNode> gNodes;
-    private List<SensorNode> sNodes;
+    private List<DataNode> dNodes;
+    private List<StorageNode> sNodes;
     private Map<SensorNode, Set<SensorNode>> graph;
+
+    private final Map<Pair<SensorNode, SensorNode>, Integer> costMap = new HashMap<>();
 
     private final double width, length;
     private int dataPacketCount;
@@ -41,7 +43,7 @@ public class SensorNetwork implements Network {
         this.transmissionRange = tr;
 
         /* Used to separate each type of node for later use and retrieval */
-        this.gNodes = new ArrayList<>(p);
+        this.dNodes = new ArrayList<>(p);
         this.sNodes = new ArrayList<>(N - p);
 
         /* Init the Sensor Network to allow basic operations on it */
@@ -97,7 +99,7 @@ public class SensorNetwork implements Network {
 
             this.nodes = new ArrayList<>(N);
             this.sNodes = new ArrayList<>(N);
-            this.gNodes = new ArrayList<>(N);
+            this.dNodes = new ArrayList<>(N);
 
             String[] lineArgs;
             double x, y;
@@ -113,22 +115,51 @@ public class SensorNetwork implements Network {
 
                 // Requires JDK 12+
                 node = switch (lineArgs[0]) {
-                    case "d" -> new DataNode(x, y, this.transmissionRange);
-                    case "s" -> new StorageNode(x, y, this.transmissionRange);
+                    case "d" -> new DataNode(x, y, this.transmissionRange, this.dataPacketCount);
+                    case "s" -> new StorageNode(x, y, this.transmissionRange, this.storageCapacity);
                     default -> throw new IOException();
                 };
 
                 this.nodes.add(node);
                 if (node instanceof DataNode) {
-                    this.gNodes.add(node);
+                    this.dNodes.add((DataNode) node);
                 } else {
-                    this.sNodes.add(node);
+                    this.sNodes.add((StorageNode) node);
                 }
             }
             this.graph = this.initGraph(this.nodes);
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid file provided!");
         }
+    }
+
+    public static SensorNetwork of(double x, double y, int N, double tr, int p, int q, int m) {
+        SensorNetwork network;
+        int attempts = 0;
+        do {
+            network = new SensorNetwork(x, y, N, tr, p, q, m);
+
+            if (!network.isFeasible() || attempts > N * 1000) {
+                System.out.println("Invalid network parameters! Please re-run the program.");
+                System.out.println("Exiting the program...");
+                System.exit(0);
+            }
+            attempts++;
+
+        } while(!(network.isConnected()));
+
+        return network;
+    }
+
+    public static SensorNetwork from(String fileName) {
+        return new SensorNetwork(fileName);
+    }
+
+    public static SensorNetwork from(String fileName, int overflowPackets, int storageCapacity) {
+        SensorNetwork sn = new SensorNetwork(fileName);
+        sn.setOverflowPackets(overflowPackets);
+        sn.setStorageCapacity(storageCapacity);
+        return sn;
     }
 
     private List<SensorNode> initNodes(int nodeCount, int p) {
@@ -150,12 +181,12 @@ public class SensorNetwork implements Network {
             y = this.length * rand.nextDouble();
 
             if ((choice < 5 && p > 0) || nodeCount - index <= p) {
-                tmp = new DataNode(x, y, this.transmissionRange);
-                this.gNodes.add(tmp);
+                tmp = new DataNode(x, y, this.transmissionRange, this.dataPacketCount);
+                this.dNodes.add((DataNode) tmp);
                 p--;
             } else {
-                tmp = new StorageNode(x, y, this.transmissionRange);
-                this.sNodes.add(tmp);
+                tmp = new StorageNode(x, y, this.transmissionRange, this.storageCapacity);
+                this.sNodes.add((StorageNode) tmp);
             }
             nodes.add(tmp);
         }
@@ -201,12 +232,12 @@ public class SensorNetwork implements Network {
     }
 
     @Override
-    public List<SensorNode> getDataNodes() {
-        return Collections.unmodifiableList(this.gNodes);
+    public List<DataNode> getDataNodes() {
+        return Collections.unmodifiableList(this.dNodes);
     }
 
     @Override
-    public List<SensorNode> getStorageNodes() {
+    public List<StorageNode> getStorageNodes() {
         return Collections.unmodifiableList(this.sNodes);
     }
 
@@ -229,7 +260,7 @@ public class SensorNetwork implements Network {
      */
     @Override
     public boolean isFeasible() {
-        int p = this.gNodes.size();
+        int p = this.dNodes.size();
         return p * this.dataPacketCount <= (this.nodes.size() - p) * this.storageCapacity;
     }
 
@@ -240,7 +271,14 @@ public class SensorNetwork implements Network {
 
     @Override
     public int calculateMinCost(SensorNode from, SensorNode to) {
-        return this.calculateCostOfPath(this.getMinCostPath(from, to));
+        Pair<SensorNode, SensorNode> pair = Pair.of(from, to);
+        if (costMap.containsKey(pair)) {
+            return costMap.get(pair);
+        }
+
+        int cost = this.calculateCostOfPath(this.getMinCostPath(from, to));
+        costMap.put(pair, cost);
+        return cost;
     }
 
     /**
@@ -278,18 +316,18 @@ public class SensorNetwork implements Network {
     public void save(String fileName) {
         File file = new File(fileName);
 
-         try (PrintWriter pw = new PrintWriter(file)) {
-             pw.printf("%f %f %f\n", this.getWidth(), this.getLength(), this.transmissionRange);   // X, Y, Tr
-             pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity);  // q m
-             pw.printf("%d %d\n", this.nodes.size(), this.gNodes.size());       // N p
+        try (PrintWriter pw = new PrintWriter(file)) {
+            pw.printf("%f %f %f\n", this.getWidth(), this.getLength(), this.transmissionRange);   // X, Y, Tr
+            pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity);  // q m
+            pw.printf("%d %d\n", this.nodes.size(), this.dNodes.size());       // N p
 
-             for (SensorNode n : this.nodes) {
-                 pw.printf("%s %f %f\n", (n instanceof DataNode) ? 'd' : 's', n.getX(), n.getY());
-             }
-             System.out.printf("Saved sensor network in file \"%s\"!\n", fileName);
-         } catch (IOException e) {
-             System.out.printf("ERROR: Failed to create \"%s\"!\n", fileName);
-         }
+            for (SensorNode n : this.nodes) {
+                pw.printf("%s %f %f\n", (n instanceof DataNode) ? 'd' : 's', n.getX(), n.getY());
+            }
+            System.out.printf("Saved sensor network in file \"%s\"!\n", fileName);
+        } catch (IOException e) {
+            System.out.printf("ERROR: Failed to create \"%s\"!\n", fileName);
+        }
     }
 
     private boolean dfs(List<SensorNode> nodes) {
@@ -319,7 +357,7 @@ public class SensorNetwork implements Network {
      */
     @Override
     public void saveAsCsInp(String fileName) {
-        final int supply = this.dataPacketCount * this.gNodes.size();
+        final int supply = this.dataPacketCount * this.dNodes.size();
         final int demand = -supply;
         final int minFlow = 0;
         final int maxFlow = this.dataPacketCount;
@@ -347,14 +385,14 @@ public class SensorNetwork implements Network {
             writer.println("c arc has <tail> <head> <capacity l.b.> <capacity u.b> <cost>");
 
             /* Path from Source to DN is always 0 cost (not represented in the network) */
-            for (SensorNode dn : this.gNodes) {
+            for (SensorNode dn : this.dNodes) {
                 writer.printf("a %d %d %d %d %d\n", 0, dn.getUuid(), minFlow, maxFlow, 0);
             }
 
             /* Find all paths from DN#->SN# */
             List<SensorNode> path;
             int currCost;
-            for (SensorNode dn : this.gNodes) {
+            for (SensorNode dn : this.dNodes) {
                 for (SensorNode sn : this.sNodes) {
                     path = this.bfs(this.graph, dn, sn);
                     currCost = this.calculateCostOfPath(path);
@@ -374,7 +412,7 @@ public class SensorNetwork implements Network {
     }
 
     private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
-        Queue<Tuple<SensorNode, Integer, SensorNode>> q = new PriorityQueue<>(Comparator.comparing(Tuple::getSecond));
+        Queue<Tuple<SensorNode, Integer, SensorNode>> q = new PriorityQueue<>(Comparator.comparing(Tuple::second));
         Map<SensorNode, SensorNode> backPointers = new HashMap<>();
         q.offer(Tuple.of(start, 0, null));
 
@@ -384,9 +422,9 @@ public class SensorNetwork implements Network {
         int value;
         while (!q.isEmpty()) {
             currPair = q.poll();
-            curr = currPair.getFirst();
-            value = currPair.getSecond();
-            prev = currPair.getThird();
+            curr = currPair.first();
+            value = currPair.second();
+            prev = currPair.third();
 
             if (!backPointers.containsKey(curr)) {
                 backPointers.put(curr, prev);
@@ -416,14 +454,53 @@ public class SensorNetwork implements Network {
     }
 
     private int getEdgeCount() {
-        return this.nodes.size() + this.sNodes.size() * this.gNodes.size();
+        return this.nodes.size() + this.sNodes.size() * this.dNodes.size();
     }
 
     public void setOverflowPackets(int overflowPackets) {
         this.dataPacketCount = overflowPackets;
+
+        for (DataNode dn : this.dNodes) {
+            dn.setOverflowPackets(overflowPackets);
+        }
     }
 
     public void setStorageCapacity(int storageCapacity) {
         this.storageCapacity = storageCapacity;
+
+        for (StorageNode sn : this.sNodes) {
+            sn.setCapacity(storageCapacity);
+        }
+    }
+
+    @Override
+    public boolean canSendPackets(DataNode dn, StorageNode sn, int packets) {
+        return dn.canRemovePackets(packets) && sn.canStore(packets);
+    }
+
+    @Override
+    public void sendPackets(DataNode dn, StorageNode sn, int packets) {
+        if (!this.canSendPackets(dn, sn, packets)) {
+            throw new IllegalArgumentException(
+                    String.format("Cannot send from %s (%d/%d packets left) -> %s (%d/%d space left)\n",
+                            dn.getName(), dn.getPacketsLeft(), this.dataPacketCount,
+                            sn.getName(), sn.getSpaceLeft(), this.storageCapacity
+                    )
+            );
+        }
+
+        dn.removePackets(packets);
+        sn.storePackets(packets);
+    }
+
+    @Override
+    public void resetPackets() {
+        for (DataNode dn : this.dNodes) {
+            dn.resetPackets();
+        }
+
+        for (StorageNode sn : this.sNodes) {
+            sn.resetPackets();
+        }
     }
 }
