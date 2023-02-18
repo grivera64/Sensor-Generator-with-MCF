@@ -45,8 +45,8 @@ public class SensorToFlowNetworkMain extends Application {
         prettyPrint(network.getDataNodes(), "Generator Nodes   Coordinates");
         prettyPrint(network.getStorageNodes(), "Storage Nodes    Coordinates");
 
-        System.out.printf("com.grivera.generator.Network is connected: %b\n", network.isConnected());
-        System.out.printf("com.grivera.generator.Network is feasible: %b\n", network.isFeasible());
+        System.out.printf("Network is connected: %b\n", network.isConnected());
+        System.out.printf("Network is feasible: %b\n", network.isFeasible());
 
         network.saveAsCsInp("output_sensor_flow_diagram.inp");
         guiGraph = new SensorNetworkGraph(network, guiWidth, guiHeight);
@@ -204,7 +204,7 @@ public class SensorToFlowNetworkMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Wireless Sensor com.grivera.generator.Network Generator | Giovanni Rivera");
+        primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
         primaryStage.setWidth(guiWidth);
         primaryStage.setHeight(guiHeight);
         primaryStage.setScene(new Scene(guiGraph));
