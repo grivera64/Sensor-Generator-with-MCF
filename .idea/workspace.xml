@@ -7,13 +7,15 @@
     <list default="true" id="e3fbd3c9-7d19-4c7e-9f09-ac053452ba3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetwork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/DataNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/Network.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/util/Pair.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetwork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorNetworkGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetworkGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/StorageNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/StorageNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tuple.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/StorageNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/StorageNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/util/Tuple.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

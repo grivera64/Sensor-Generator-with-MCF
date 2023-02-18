@@ -1,5 +1,7 @@
+package com.grivera.generator;
+
 /**
- * Represents the basic form of a Sensor Node in a Sensor Network
+ * Represents the basic form of a Sensor Node in a Sensor com.grivera.generator.Network
  */
 public abstract class SensorNode {
 

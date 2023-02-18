@@ -1,10 +1,15 @@
+package com.grivera.generator;
+
+import com.grivera.util.Pair;
+import com.grivera.util.Tuple;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
 /**
- * An implementation of a Network that contains Data and Storage Sensor Nodes
+ * An implementation of a com.grivera.generator.Network that contains Data and Storage Sensor Nodes
  * @see Network
  */
 public class SensorNetwork implements Network {
@@ -26,7 +31,7 @@ public class SensorNetwork implements Network {
     private final double transmissionRange;
 
     /**
-     * Constructor to create a Sensor Network
+     * Constructor to create a Sensor com.grivera.generator.Network
      * @param x the width of the network (in meters)
      * @param y the length of the network (in meters)
      * @param N the number of nodes
@@ -46,13 +51,13 @@ public class SensorNetwork implements Network {
         this.dNodes = new ArrayList<>(p);
         this.sNodes = new ArrayList<>(N - p);
 
-        /* Init the Sensor Network to allow basic operations on it */
+        /* Init the Sensor com.grivera.generator.Network to allow basic operations on it */
         this.nodes = this.initNodes(N, p);
         this.graph = this.initGraph(this.nodes);
     }
 
     /**
-     * Copy constructor to create a Sensor Network from an .sn file.
+     * Copy constructor to create a Sensor com.grivera.generator.Network from an .sn file.
      *
      * <p></p>
      *

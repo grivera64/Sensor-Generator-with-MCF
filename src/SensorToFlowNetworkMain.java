@@ -1,3 +1,7 @@
+import com.grivera.generator.Network;
+import com.grivera.generator.SensorNetwork;
+import com.grivera.generator.SensorNetworkGraph;
+import com.grivera.generator.SensorNode;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,8 +45,8 @@ public class SensorToFlowNetworkMain extends Application {
         prettyPrint(network.getDataNodes(), "Generator Nodes   Coordinates");
         prettyPrint(network.getStorageNodes(), "Storage Nodes    Coordinates");
 
-        System.out.printf("Network is connected: %b\n", network.isConnected());
-        System.out.printf("Network is feasible: %b\n", network.isFeasible());
+        System.out.printf("com.grivera.generator.Network is connected: %b\n", network.isConnected());
+        System.out.printf("com.grivera.generator.Network is feasible: %b\n", network.isFeasible());
 
         network.saveAsCsInp("output_sensor_flow_diagram.inp");
         guiGraph = new SensorNetworkGraph(network, guiWidth, guiHeight);
@@ -54,13 +58,11 @@ public class SensorToFlowNetworkMain extends Application {
     }
 
     /**
-     * Asks for Network parameters input through stdin and generates a Network object.
+     * Asks for com.grivera.generator.Network parameters input through stdin and generates a com.grivera.generator.Network object.
      * @return the generated network
      * @see Network
      */
     public static Network generateNetwork() {
-        Network network;
-
         System.out.println("Please enter the width (x) of the sensor network:");
         System.out.print("x = ");
         double width = keyboard.nextDouble();
@@ -101,7 +103,7 @@ public class SensorToFlowNetworkMain extends Application {
     }
 
     /**
-     * Asks for an .sn file through stdin and generates a Network object.
+     * Asks for an .sn file through stdin and generates a com.grivera.generator.Network object.
      * @return the generated network
      * @see Network
      */
@@ -129,7 +131,7 @@ public class SensorToFlowNetworkMain extends Application {
 
     /**
      * Asks for a source and destination node to draw
-     * an orange path outline on the Network graph's GUI.
+     * an orange path outline on the com.grivera.generator.Network graph's GUI.
      * @param network the network to draw on
      * @see Network
      */
@@ -202,7 +204,7 @@ public class SensorToFlowNetworkMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Wireless Sensor Network Generator | Giovanni Rivera");
+        primaryStage.setTitle("Wireless Sensor com.grivera.generator.Network Generator | Giovanni Rivera");
         primaryStage.setWidth(guiWidth);
         primaryStage.setHeight(guiHeight);
         primaryStage.setScene(new Scene(guiGraph));

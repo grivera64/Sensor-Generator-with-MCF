@@ -1,5 +1,7 @@
+package com.grivera.generator;
+
 /**
- * Represents a Sensor Node in a Network that has overflow data packets to store.
+ * Represents a Sensor Node in a com.grivera.generator.Network that has overflow data packets to store.
  *
  * @see SensorNode
  */

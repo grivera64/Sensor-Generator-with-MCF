@@ -1,3 +1,5 @@
+package com.grivera.generator;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -16,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents the Sensor Network graph pane on the main stage.
+ * Represents the Sensor com.grivera.generator.Network graph pane on the main stage.
  * @see Pane javafx.scene.layout.Pane
  */
 public class SensorNetworkGraph extends Pane {
