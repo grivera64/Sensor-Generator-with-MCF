@@ -9,8 +9,8 @@ public interface Network {
     double getWidth();
     double getLength();
     List<SensorNode> getSensorNodes();
-    List<SensorNode> getDataNodes();
-    List<SensorNode> getStorageNodes();
+    List<DataNode> getDataNodes();
+    List<StorageNode> getStorageNodes();
     boolean isConnected();
     boolean isFeasible();
     Map<SensorNode, Set<SensorNode>> getAdjacencyList();    // Returns the connection of nodes (using ID)
@@ -21,4 +21,7 @@ public interface Network {
     void saveAsCsInp(String fileName);
     void setOverflowPackets(int overflowPackets);
     void setStorageCapacity(int storageCapacity);
+    boolean canSendPackets(DataNode dn, StorageNode sn, int packets);
+    void sendPackets(DataNode dn, StorageNode sn, int packets);
+    void resetPackets();
 }

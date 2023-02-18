@@ -18,11 +18,11 @@ Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
 ## About
 
 ---
-This program generates and loads a sensor network and produces its flow network in **DIMAC** format for usage in
+This program generates, loads, and visualizes a sensor network and produces its flow network in **DIMAC** format for usage in
 Golberg's and Cherkassky's CS2 program from the paper "An Efficient Implementation of a Scaling Minimum-Cost Flow
 Algorithm" by A.V. Goldberg, J. Algorithms, Vol. 22 (1997), pp. 1--29.
 
-The program also visualizes the sensor network to explain what the flow network represents.
+This program can also be used to run different strategies for sending data packets (Documentation is in WIP).
 
 ## Setup
 

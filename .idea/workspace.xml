@@ -6,13 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="e3fbd3c9-7d19-4c7e-9f09-ac053452ba3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNetwork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SensorToFlowNetworkMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/StorageNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/StorageNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tuple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tuple.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -32,6 +45,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Git.Branch.Popup.ShowAllRemotes&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
@@ -90,6 +104,8 @@
       <workItem from="1675669137851" duration="90000" />
       <workItem from="1675814166562" duration="106000" />
       <workItem from="1675840533369" duration="1024000" />
+      <workItem from="1676176134453" duration="668000" />
+      <workItem from="1676257856978" duration="187000" />
     </task>
     <servers />
   </component>
