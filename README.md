@@ -1,7 +1,7 @@
 # Sensor-Generator-with-MCF
 
 ---
-Sensor com.grivera.generator.Network generator and visualizer for CS2 Min-Cost Flow input.
+Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
 
 ## Table of Contents
 
@@ -10,10 +10,11 @@ Sensor com.grivera.generator.Network generator and visualizer for CS2 Min-Cost F
 - [Setup](#setup)
 - [Example](#example)
   - [Terminal Output](#terminal-output)
-  - [Generated Sensor com.grivera.generator.Network](#generated-sensor-network)
+  - [Generated Sensor Network](#generated-sensor-network)
   - [Min-cost Path from DN03 to SN01](#min-cost-path-from-dn03-to-sn01)
   - [output_sensor_flow_diagram.inp](#outputsensorflowdiagraminp)
 - [Author](#author)
+- [Related Projects](#related-projects)
 
 ## About
 
@@ -124,13 +125,13 @@ SN03          (9.000000, 8.500000) [4]
 SN04          (3.400000, 9.900000) [6]
 SN05          (0.700000, 5.500000) [7]
 
-com.grivera.generator.Network is connected: true
-com.grivera.generator.Network is feasible: true
+Network is connected: true
+Network is feasible: true
 Saved flow network in file "output_sensor_flow_diagram.inp"!
 Saved sensor network in file "sensor_network.png"
 ```
 
-### Generated Sensor com.grivera.generator.Network
+### Generated Sensor Network
 
 ![(sensor_network.jpg)](res/sensor_network.jpg)
 
@@ -199,6 +200,13 @@ a 6 11 0 2 0
 a 7 11 0 2 0
 
 ```
+
+## Related Projects
+
+---
+- Data Preservation Simulation ([grivera64/Data-Preservation-Simulation](https://github.com/grivera64/Data-Preservation-Simulation))
+  - A simulation for testing data preservation of base station-less networks (BSNs).
+  - By Giovanni Rivera ([@grivera64](https://github.com/grivera64)) 
 
 ## Author
 
