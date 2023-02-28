@@ -14,10 +14,6 @@ import java.util.*;
  */
 public class SensorNetwork implements Network {
 
-    private static final int BITS_PER_PACKET = 3200;
-    private static final double E_elec = 100e-9;
-    private static final double E_amp = 100e-12;
-
     private List<SensorNode> nodes;
     private List<DataNode> dNodes;
     private List<StorageNode> sNodes;
