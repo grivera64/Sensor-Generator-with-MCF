@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e3fbd3c9-7d19-4c7e-9f09-ac053452ba3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetwork.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +99,11 @@
       <workItem from="1675840533369" duration="1024000" />
       <workItem from="1676176134453" duration="668000" />
       <workItem from="1676257856978" duration="187000" />
-      <workItem from="1676771168796" duration="458000" />
+      <workItem from="1676771168796" duration="483000" />
+      <workItem from="1676771724346" duration="9000" />
+      <workItem from="1676868097274" duration="719000" />
+      <workItem from="1677115884769" duration="18000" />
+      <workItem from="1677572134193" duration="802000" />
     </task>
     <servers />
   </component>

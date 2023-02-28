@@ -345,13 +345,21 @@ public class SensorNetwork implements Network {
             curr = stack.pop();
             seen.add(curr);
 
-            for (SensorNode neighbor : this.graph.getOrDefault(curr, Set.of())) {
+            for (SensorNode neighbor : this.getNeighbors(curr)) {
                 if (!seen.contains(neighbor)) {
                     stack.push(neighbor);
                 }
             }
         }
         return seen.size() == nodes.size();
+    }
+
+    private Set<SensorNode> getNeighbors(SensorNode node) {
+        return this.graph.getOrDefault(node, Set.of());
+    }
+
+    private boolean isConnected(SensorNode sensorNode1, SensorNode sensorNode2) {
+        return this.getNeighbors(sensorNode1).contains(sensorNode2);
     }
 
     /**
