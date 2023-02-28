@@ -7,6 +7,10 @@ public abstract class SensorNode {
 
     private static int uuidCounter = 1;
 
+    private static final int BITS_PER_PACKET = 3200;
+    private static final double E_elec = 100e-9;
+    private static final double E_amp = 100e-12;
+
     private int uuid;
     private final double x, y, tr;
     private String name;
@@ -64,6 +68,18 @@ public abstract class SensorNode {
 
     public String getName() {
         return this.name;
+    }
+
+    public int calculateTransmissionCost(SensorNode receiverNode, int packetsToSend) {
+        int totalBits = BITS_PER_PACKET * packetsToSend;
+        int cost = totalBits * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
+        return cost * Math.pow(10, -6);
+    }
+
+    public int calculateReceivingCost(int packetsToReceive) {
+        int totalBits = BITS_PER_PACKET * packetsToReceive;
+        int cost = totalBits * E_elec;
+        return cost * Math.pow(10, -6);
     }
 
     @Override

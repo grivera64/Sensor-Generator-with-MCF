@@ -462,8 +462,7 @@ public class SensorNetwork implements Network {
     }
 
     private int getCost(SensorNode from, SensorNode to) {
-        double cost = BITS_PER_PACKET * (2 * E_elec + E_amp * Math.pow(from.distanceTo(to), 2));
-        return (int) Math.round(cost * Math.pow(10, 6));
+        return from.calculateTransmissionCost(to, 1) + to.calculateReceivingCost(1);
     }
 
     private int getEdgeCount() {
