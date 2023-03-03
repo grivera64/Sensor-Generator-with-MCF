@@ -25,7 +25,7 @@ public class SensorNetwork implements Network {
     private int dataPacketCount;
     private int storageCapacity;
     private final double transmissionRange;
-    private final int batteryCapacity;
+    private int batteryCapacity;
 
     /**
      * Constructor to create a Sensor com.grivera.generator.Network
@@ -62,11 +62,11 @@ public class SensorNetwork implements Network {
      *
      * The file must follow the following format:
      * <p></p>
-     * width length
+     * width length transmission_range
      * <p>
      * data_packets_per_node storage_capacity_per_node
      * <p>
-     * total_nodes transmission_range
+     * total_nodes battery_capacity_per_node
      * <p>
      * (d/s) id x y
      * <p>

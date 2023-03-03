@@ -99,7 +99,13 @@ public class SensorToFlowNetworkMain extends Application {
         keyboard.nextLine();
         System.out.println();
 
-        return SensorNetwork.of(width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount);
+        System.out.println("Please enter the battery capacity (c) each Sensor Node has:");
+        System.out.print("c = ");
+        int energyCapacity = keyboard.nextInt();
+        keyboard.nextLine();
+        System.out.println();
+
+        return SensorNetwork.of(width, height, nodeCount, transmissionRange, gNodeCount, packetsCount, storageCount, energyCapacity);
     }
 
     /**
