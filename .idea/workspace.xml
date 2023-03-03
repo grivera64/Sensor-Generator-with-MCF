@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e3fbd3c9-7d19-4c7e-9f09-ac053452ba3c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNetwork.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/grivera/generator/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/grivera/generator/SensorNode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

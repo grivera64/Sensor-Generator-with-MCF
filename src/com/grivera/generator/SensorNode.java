@@ -78,15 +78,15 @@ public abstract class SensorNode {
         this.batteryCapacity = batteryCapacity;
         this.resetEnergy();
     }
-    
+
     public int getEnergy() {
         return this.energy;
     }
-    
+
     public boolean hasEnergy() {
         return this.energy > 0;
     }
-    
+
     public void resetEnergy() {
         this.energy = this.batteryCapacity;
     }
