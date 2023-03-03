@@ -25,11 +25,7 @@ public class SensorNetwork implements Network {
     private int dataPacketCount;
     private int storageCapacity;
     private final double transmissionRange;
-<<<<<<< HEAD
     private int batteryCapacity;
-=======
-    private final int batteryCapacity;
->>>>>>> fdcea17 (WIP: Add battery power to Network/Nodes (max-flow))
 
     /**
      * Constructor to create a Sensor com.grivera.generator.Network
