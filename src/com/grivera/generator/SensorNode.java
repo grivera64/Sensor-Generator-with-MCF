@@ -14,12 +14,16 @@ public abstract class SensorNode {
     private int uuid;
     private final double x, y, tr;
     private String name;
+    private int batteryCapacity;
+    private int power;
 
-    public SensorNode(double x, double y, double tr, String name) {
+    public SensorNode(double x, double y, double tr, String name, int c) {
         this.x = x;
         this.y = y;
         this.tr = tr;
         this.name = name;
+        this.batteryCapacity = c;
+        this.power = c;
         this.setUuid();
     }
 
@@ -68,6 +72,23 @@ public abstract class SensorNode {
 
     public String getName() {
         return this.name;
+    }
+    
+    public void setBatteryCapacity(int batteryCapacity) {
+        this.batteryCapacity = batteryCapacity;
+        this.reserPower();
+    }
+    
+    public int getPower() {
+        return this.power;
+    }
+    
+    public boolean hasPower() {
+        return this.power > 0;
+    }
+    
+    public void resetPower() {
+        this.power = this.batteryCapacity;
     }
 
     public int calculateTransmissionCost(SensorNode receiverNode, int packetsToSend) {

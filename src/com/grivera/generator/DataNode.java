@@ -11,8 +11,8 @@ public class DataNode extends SensorNode {
     private int overflowPackets;
     private int packetsLeft;
 
-    public DataNode(double x, double y, double tr, int overflowPackets) {
-        super(x, y, tr, String.format("DN%02d", idCounter++));
+    public DataNode(double x, double y, double tr, int power, int overflowPackets) {
+        super(x, y, tr, String.format("DN%02d", idCounter++), power);
         this.setOverflowPackets(overflowPackets);
     }
 
