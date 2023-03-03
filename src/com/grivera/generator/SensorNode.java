@@ -15,7 +15,7 @@ public abstract class SensorNode {
     private final double x, y, tr;
     private String name;
     private int batteryCapacity;
-    private int energy;
+    private int power;
 
     public SensorNode(double x, double y, double tr, String name, int c) {
         this.x = x;
@@ -23,7 +23,7 @@ public abstract class SensorNode {
         this.tr = tr;
         this.name = name;
         this.batteryCapacity = c;
-        this.energy = c;
+        this.power = c;
         this.setUuid();
     }
 
@@ -76,7 +76,25 @@ public abstract class SensorNode {
     
     public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
-        this.resetEnergy();
+        this.resetPower();
+    }
+    
+    public int getPower() {
+        return this.power;
+    }
+    
+    public boolean hasPower() {
+        return this.power > 0;
+    }
+    
+    public void resetPower() {
+        this.power = this.batteryCapacity;
+    }
+
+    public int calculateTransmissionCost(SensorNode receiverNode, int packetsToSend) {
+        int totalBits = BITS_PER_PACKET * packetsToSend;
+        int cost = totalBits * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
+        return cost * Math.pow(10, -6);
     }
 
     public int getEnergy() {
