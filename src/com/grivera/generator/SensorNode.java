@@ -91,24 +91,6 @@ public abstract class SensorNode {
         this.power = this.batteryCapacity;
     }
 
-    public int calculateTransmissionCost(SensorNode receiverNode, int packetsToSend) {
-        int totalBits = BITS_PER_PACKET * packetsToSend;
-        int cost = totalBits * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
-        return cost * Math.pow(10, -6);
-    }
-
-    public int getEnergy() {
-        return this.energy;
-    }
-
-    public boolean hasEnergy() {
-        return this.energy > 0;
-    }
-
-    public void resetEnergy() {
-        this.energy = this.batteryCapacity;
-    }
-
     /**
      * Calculates the cost to transmit/relay a data packet from this Sensor Node to a specified receiver Sensor Node
      *
