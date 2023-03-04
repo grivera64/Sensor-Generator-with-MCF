@@ -97,7 +97,6 @@ public class SensorToFlowNetworkMain extends Application {
         System.out.print("m = ");
         int storageCount = keyboard.nextInt();
         keyboard.nextLine();
-        System.out.println();
 
         System.out.println("Please enter the battery capacity (c) each Sensor Node has:");
         System.out.print("c = ");

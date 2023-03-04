@@ -463,7 +463,7 @@ public class SensorNetwork implements Network {
     }
 
     private int getCost(SensorNode from, SensorNode to) {
-        return from.calculateTransmissionCost(to, 1) + to.calculateReceivingCost(1);
+        return from.calculateTransmissionCost(to) + to.calculateReceivingCost();
     }
 
     private int getEdgeCount() {

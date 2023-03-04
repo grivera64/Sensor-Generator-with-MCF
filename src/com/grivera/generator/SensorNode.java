@@ -76,7 +76,7 @@ public abstract class SensorNode {
     
     public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
-        this.reserPower();
+        this.resetPower();
     }
     
     public int getPower() {
@@ -91,16 +91,14 @@ public abstract class SensorNode {
         this.power = this.batteryCapacity;
     }
 
-    public int calculateTransmissionCost(SensorNode receiverNode, int packetsToSend) {
-        int totalBits = BITS_PER_PACKET * packetsToSend;
-        int cost = totalBits * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
-        return cost * Math.pow(10, -6);
+    public int calculateTransmissionCost(SensorNode receiverNode) {
+        double cost = BITS_PER_PACKET * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
+        return (int) Math.round(cost * Math.pow(10, 6));
     }
 
-    public int calculateReceivingCost(int packetsToReceive) {
-        int totalBits = BITS_PER_PACKET * packetsToReceive;
-        int cost = totalBits * E_elec;
-        return cost * Math.pow(10, -6);
+    public int calculateReceivingCost() {
+        double cost = BITS_PER_PACKET * E_elec;
+        return (int) Math.round(cost * Math.pow(10, 6));
     }
 
     @Override
