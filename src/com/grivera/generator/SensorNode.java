@@ -15,7 +15,7 @@ public abstract class SensorNode {
     private final double x, y, tr;
     private String name;
     private int batteryCapacity;
-    private int power;
+    private int energy;
 
     public SensorNode(double x, double y, double tr, String name, int c) {
         this.x = x;
@@ -23,7 +23,7 @@ public abstract class SensorNode {
         this.tr = tr;
         this.name = name;
         this.batteryCapacity = c;
-        this.power = c;
+        this.energy = c;
         this.setUuid();
     }
 
@@ -76,19 +76,19 @@ public abstract class SensorNode {
     
     public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
-        this.resetPower();
+        this.resetEnergy();
     }
     
-    public int getPower() {
-        return this.power;
+    public int getEnergy() {
+        return this.energy;
     }
     
-    public boolean hasPower() {
-        return this.power > 0;
+    public boolean hasEnergy() {
+        return this.energy > 0;
     }
     
-    public void resetPower() {
-        this.power = this.batteryCapacity;
+    public void resetEnergy() {
+        this.energy = this.batteryCapacity;
     }
 
     /**
