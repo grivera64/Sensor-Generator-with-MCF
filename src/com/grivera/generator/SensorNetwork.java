@@ -144,12 +144,14 @@ public class SensorNetwork implements Network {
         do {
             network = new SensorNetwork(x, y, N, tr, p, q, m, c);
 
+            /* Checks if the parameters in the program are feasible */
             if (!network.isFeasible()) {
                 System.out.println("Invalid network parameters! Please re-run the program.");
                 System.out.println("Exiting the program...");
                 System.exit(0);
             }
 
+            /* Checks if we were able to find a valid network within a reasonable range of attempts */
             if (attempts > N * 1000) {
                 System.out.printf("Failed to create a connected network after %d tries! Please re-run the program.\n",
                         N * 1000
