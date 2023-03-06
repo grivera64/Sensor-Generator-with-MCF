@@ -15,7 +15,7 @@ public abstract class SensorNode {
     private final double x, y, tr;
     private String name;
     private int batteryCapacity;
-    private int power;
+    private int energy;
 
     public SensorNode(double x, double y, double tr, String name, int c) {
         this.x = x;
@@ -23,7 +23,7 @@ public abstract class SensorNode {
         this.tr = tr;
         this.name = name;
         this.batteryCapacity = c;
-        this.power = c;
+        this.energy = c;
         this.setUuid();
     }
 
@@ -76,26 +76,37 @@ public abstract class SensorNode {
     
     public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
-        this.resetPower();
+        this.resetEnergy();
     }
     
-    public int getPower() {
-        return this.power;
+    public int getEnergy() {
+        return this.energy;
     }
     
-    public boolean hasPower() {
-        return this.power > 0;
+    public boolean hasEnergy() {
+        return this.energy > 0;
     }
     
-    public void resetPower() {
-        this.power = this.batteryCapacity;
+    public void resetEnergy() {
+        this.energy = this.batteryCapacity;
     }
 
+    /**
+     * Calculates the cost to transmit/relay a data packet from this Sensor Node to a specified receiver Sensor Node
+     *
+     * @param receiverNode the Sensor Node that this Sensor Node would transmit/relay one data packet to
+     * @return the cost to transmit/relay one data packet from this Sensor Node to the receiver Sensor Node
+     */
     public int calculateTransmissionCost(SensorNode receiverNode) {
         double cost = BITS_PER_PACKET * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
         return (int) Math.round(cost * Math.pow(10, 6));
     }
 
+    /**
+     * Calculates the cost for this Sensor Node to receive one transmitted/relayed data packet
+     *
+     * @return the cost for this Sensor Node to receive a transmitted/relayed data packet
+     */
     public int calculateReceivingCost() {
         double cost = BITS_PER_PACKET * E_elec;
         return (int) Math.round(cost * Math.pow(10, 6));
