@@ -1,4 +1,4 @@
-package com.grivera.generator;
+package com.grivera.generator.sensors;
 
 /**
  * Represents a Sensor Node in a com.grivera.generator.Network that has overflow data packets to store.
@@ -51,6 +51,11 @@ public class DataNode extends SensorNode {
 
     public int getPacketsLeft() {
         return this.packetsLeft;
+    }
+
+    @Override
+    public int calculateStorageCost() {
+        return 0;
     }
 
     public static void resetCounter() {

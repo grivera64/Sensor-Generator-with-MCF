@@ -1,7 +1,7 @@
 import com.grivera.generator.Network;
 import com.grivera.generator.SensorNetwork;
 import com.grivera.generator.SensorNetworkGraph;
-import com.grivera.generator.SensorNode;
+import com.grivera.generator.sensors.SensorNode;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

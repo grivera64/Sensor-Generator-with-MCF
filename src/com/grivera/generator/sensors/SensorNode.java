@@ -1,4 +1,4 @@
-package com.grivera.generator;
+package com.grivera.generator.sensors;
 
 /**
  * Represents the basic form of a Sensor Node in a Sensor com.grivera.generator.Network
@@ -7,9 +7,9 @@ public abstract class SensorNode {
 
     private static int uuidCounter = 1;
 
-    private static final int BITS_PER_PACKET = 3200;
-    private static final double E_elec = 100e-9;
-    private static final double E_amp = 100e-12;
+    protected static final int BITS_PER_PACKET = 3200;
+    protected static final double E_elec = 100e-9;
+    protected static final double E_amp = 100e-12;
 
     private int uuid;
     private final double x, y, tr;
@@ -111,6 +111,8 @@ public abstract class SensorNode {
         double cost = BITS_PER_PACKET * E_elec;
         return (int) Math.round(cost * Math.pow(10, 6));
     }
+
+    public abstract int calculateStorageCost();
 
     @Override
     public boolean equals(Object o) {

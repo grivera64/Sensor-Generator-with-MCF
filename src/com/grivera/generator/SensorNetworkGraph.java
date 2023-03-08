@@ -1,5 +1,7 @@
 package com.grivera.generator;
 
+import com.grivera.generator.sensors.DataNode;
+import com.grivera.generator.sensors.SensorNode;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;

@@ -1,5 +1,8 @@
 package com.grivera.generator;
 
+import com.grivera.generator.sensors.DataNode;
+import com.grivera.generator.sensors.SensorNode;
+import com.grivera.generator.sensors.StorageNode;
 import com.grivera.util.Pair;
 import com.grivera.util.Tuple;
 

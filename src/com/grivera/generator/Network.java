@@ -1,5 +1,9 @@
 package com.grivera.generator;
 
+import com.grivera.generator.sensors.DataNode;
+import com.grivera.generator.sensors.SensorNode;
+import com.grivera.generator.sensors.StorageNode;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

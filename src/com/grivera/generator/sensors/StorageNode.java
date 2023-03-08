@@ -1,4 +1,4 @@
-package com.grivera.generator;
+package com.grivera.generator.sensors;
 
 /**
  * Represents a Sensor Node in a com.grivera.generator.Network that has storage space for overflow data packets.
@@ -6,6 +6,8 @@ package com.grivera.generator;
  * @see SensorNode
  */
 public class StorageNode extends SensorNode {
+
+    private static final double E_store = 100e-9;
 
     private static int idCounter = 1;
     private int capacity;
@@ -55,6 +57,12 @@ public class StorageNode extends SensorNode {
 
     public int getSpaceLeft() {
         return this.capacity - this.usedSpace;
+    }
+
+    @Override
+    public int calculateStorageCost() {
+        double cost = this.usedSpace * BITS_PER_PACKET * E_store;
+        return (int) Math.round(cost * Math.pow(10, 6));
     }
 
     public static void resetCounter() {
