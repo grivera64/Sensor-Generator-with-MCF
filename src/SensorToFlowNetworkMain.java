@@ -47,6 +47,7 @@ public class SensorToFlowNetworkMain extends Application {
 
         System.out.printf("Network is connected: %b\n", network.isConnected());
         System.out.printf("Network is feasible: %b\n", network.isFeasible());
+        System.out.printf("Network is feasible (Max Flow): %b\n", network.isMaxFlowFeasible());
 
         network.saveAsCsInp("output_sensor_flow_diagram.inp");
         guiGraph = new SensorNetworkGraph(network, guiWidth, guiHeight);
