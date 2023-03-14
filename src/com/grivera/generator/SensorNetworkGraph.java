@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents the Sensor com.grivera.generator.Network graph pane on the main stage.
+ * Represents the Sensor com.grivera.generator.Network graph pane on the main
+ * stage.
+ * 
  * @see Pane javafx.scene.layout.Pane
  */
 public class SensorNetworkGraph extends Pane {
@@ -34,6 +36,7 @@ public class SensorNetworkGraph extends Pane {
 
     /**
      * Creates the pane with the network on it.
+     * 
      * @param network
      * @param width
      * @param height
@@ -151,18 +154,17 @@ public class SensorNetworkGraph extends Pane {
     }
 
     /**
-     * Draws an orange path between the from and to Sensor Nodes that represents the min-cost path.
+     * Draws an orange path between the from and to Sensor Nodes that represents the
+     * min-cost path.
      *
      * @param from the starting Sensor Node
-     * @param to the ending Sensor Node
+     * @param to   the ending Sensor Node
      */
     public void highlightPath(SensorNode from, SensorNode to) {
         List<SensorNode> path = this.network.getMinCostPath(from, to);
         System.out.printf("Highlighted Min-Cost Path: %s\n",
                 String.join(" -> ",
-                        path.stream().map(SensorNode::getName).toArray(CharSequence[]::new)
-                )
-        );
+                        path.stream().map(SensorNode::getName).toArray(CharSequence[]::new)));
         System.out.printf("Cost of Path: %d micro J\n", this.network.calculateCostOfPath(path));
 
         this.gc.beginPath();
@@ -205,8 +207,8 @@ public class SensorNetworkGraph extends Pane {
     }
 
     private double pointToScale(double val, double scale) {
-//        Pixels -> Real
-//        return ((val - 40) / 50) * increment;
+        // Pixels -> Real
+        // return ((val - 40) / 50) * increment;
         return (50 * val) / scale + 40;
     }
 

@@ -33,6 +33,9 @@ This program can also be used to run different strategies for sending data packe
 
 - JDK 14 or newer ([Latest JDK from Oracle](https://www.oracle.com/java/technologies/downloads/))
 - JavaFX SDK 14.0.0.1 or newer ([Latest SDK from GluonHQ](https://openjfx.io/openjfx-docs/#introduction))
+- Google OR-Tools 9.5.x or newer ([Latest SDK from Google](https://developers.google.com/optimization/install/java))
+- Java Native Access 5.13.0 or newer ([Latest SDK from Maven](https://mvnrepository.com/artifact/net.java.dev.jna/jna/5.13.0))
+- Google Protocol Buffers [Core] 4.0.0 or newer ([Latest SDK from Maven](https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java/4.0.0-rc-2))
 
 ### 1. Clone the Repository
 
@@ -55,15 +58,16 @@ cd src
 
 Windows
 ```bat
-javac -p "%PATH_TO_FX%;." --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
+javac -p ".;%PATH_TO_FX%" --add-modules javafx.controls,javafx.graphics,javafx.swing -cp ".;%PATH_TO_OR_TOOLS%/*;%PATH_TO_JNA%/*;%PATH_TO_PROTOBUF%/*;" *.java -d ../bin
 ```
 
 Mac/Linux
 ```sh
-javac -p "${PATH_TO_FX};." --add-modules javafx.controls,javafx.graphics,javafx.swing *.java -d ../bin
+javac -p ".;${PATH_TO_FX}" --add-modules javafx.controls,javafx.graphics,javafx.swing -cp ".;${PATH_TO_OR_TOOLS}/*;${PATH_TO_JNA}/*;${PATH_TO_PROTOBUF}/*;" *.java -d ../bin
 ```
 
-> **Note**: Environment variable `PATH_TO_FX` should be set to the location of the `lib/` folder from your JavaFX install. i.e. `openjfx-15.0.0.1-sdk/lib/`
+> **Note**: Environment variables such as `PATH_TO_FX` should be set to the location of the `lib/` folder from your JavaFX install. i.e. `openjfx-15.0.0.1-sdk/lib/`.
+> If the installed dependency doesn't have a `lib/` folder, use the respective folder that houses the .jar files that we need.
 >
 > If you don't have your environment variable set up, you can replace the variable with the respective path manually.
 
@@ -76,13 +80,13 @@ cd bin
 
 ### 5. Run the program
 Windows
-```sh
-java -p "%PATH_TO_FX%;." --add-modules javafx.controls,javafx.graphics,javafx.swing SensorToFlowNetworkMain 
+```bat
+java -p ".;%PATH_TO_FX%" --add-modules javafx.controls,javafx.graphics,javafx.swing -cp ".;%PATH_TO_OR_TOOLS%/*;%PATH_TO_JNA%/*;%PATH_TO_PROTOBUF%/*;" SensorToFlowNetworkMain
 ```
 
 Mac/Linux
 ```sh
-java -p "${PATH_TO_FX};." --add-modules javafx.controls,javafx.graphics,javafx.swing SensorToFlowNetworkMain 
+java -p ".;${PATH_TO_FX}" --add-modules javafx.controls,javafx.graphics,javafx.swing -cp ".;${PATH_TO_OR_TOOLS}/*;${PATH_TO_JNA}/*;${PATH_TO_PROTOBUF}/*;" SensorToFlowNetworkMain 
 ```
 
 ## Example
@@ -206,7 +210,7 @@ a 7 11 0 2 0
 ---
 - Data Preservation Simulation ([grivera64/Data-Preservation-Simulation](https://github.com/grivera64/Data-Preservation-Simulation))
   - A simulation for testing data preservation of base station-less networks (BSNs).
-  - By Giovanni Rivera ([@grivera64](https://github.com/grivera64)) 
+  - By Giovanni Rivera ([@grivera64](https://github.com/grivera64))
 
 ## Author
 

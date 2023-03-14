@@ -11,8 +11,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
+//imports for google OR-tools
+import com.google.ortools.Loader;
+import com.google.ortools.linearsolver.MPConstraint;
+import com.google.ortools.linearsolver.MPObjective;
+import com.google.ortools.linearsolver.MPSolver;
+import com.google.ortools.linearsolver.MPVariable;
+
 /**
- * An implementation of a com.grivera.generator.Network that contains Data and Storage Sensor Nodes
+ * An implementation of a com.grivera.generator.Network that contains Data and
+ * Storage Sensor Nodes
+ * 
  * @see Network
  */
 public class SensorNetwork implements Network {
@@ -32,14 +41,15 @@ public class SensorNetwork implements Network {
 
     /**
      * Constructor to create a Sensor com.grivera.generator.Network
-     * @param x the width of the network (in meters)
-     * @param y the length of the network (in meters)
-     * @param N the number of nodes
+     * 
+     * @param x  the width of the network (in meters)
+     * @param y  the length of the network (in meters)
+     * @param N  the number of nodes
      * @param tr the transmission range of the nodes (in meters)
-     * @param p the number of Data Nodes in the network
-     * @param q the number of data packets each Data Node has
-     * @param m the storage capacity each Storage nodes has
-     * @param c the battery capacity of each Sensor node (in micro Joules)
+     * @param p  the number of Data Nodes in the network
+     * @param q  the number of data packets each Data Node has
+     * @param m  the storage capacity each Storage nodes has
+     * @param c  the battery capacity of each Sensor node (in micro Joules)
      */
     public SensorNetwork(double x, double y, int N, double tr, int p, int q, int m, int c) {
         this.width = x;
@@ -53,18 +63,23 @@ public class SensorNetwork implements Network {
         this.dNodes = new ArrayList<>(p);
         this.sNodes = new ArrayList<>(N - p);
 
-        /* Init the Sensor com.grivera.generator.Network to allow basic operations on it */
+        /*
+         * Init the Sensor com.grivera.generator.Network to allow basic operations on it
+         */
         this.nodes = this.initNodes(N, p);
         this.graph = this.initGraph(this.nodes);
     }
 
     /**
-     * Copy constructor to create a Sensor com.grivera.generator.Network from an .sn file.
+     * Copy constructor to create a Sensor com.grivera.generator.Network from an .sn
+     * file.
      *
-     * <p></p>
+     * <p>
+     * </p>
      *
      * The file must follow the following format:
-     * <p></p>
+     * <p>
+     * </p>
      * width length transmission_range
      * <p>
      * data_packets_per_node storage_capacity_per_node
@@ -124,7 +139,8 @@ public class SensorNetwork implements Network {
                 // Requires JDK 12+
                 node = switch (lineArgs[0]) {
                     case "d" -> new DataNode(x, y, this.transmissionRange, this.batteryCapacity, this.dataPacketCount);
-                    case "s" -> new StorageNode(x, y, this.transmissionRange, this.batteryCapacity, this.storageCapacity);
+                    case "s" ->
+                        new StorageNode(x, y, this.transmissionRange, this.batteryCapacity, this.storageCapacity);
                     default -> throw new IOException();
                 };
 
@@ -154,17 +170,19 @@ public class SensorNetwork implements Network {
                 System.exit(0);
             }
 
-            /* Checks if we were able to find a valid network within a reasonable range of attempts */
+            /*
+             * Checks if we were able to find a valid network within a reasonable range of
+             * attempts
+             */
             if (attempts > N * 1000) {
                 System.out.printf("Failed to create a connected network after %d tries! Please re-run the program.\n",
-                        N * 1000
-                );
+                        N * 1000);
                 System.out.println("Exiting the program...");
                 System.exit(0);
             }
             attempts++;
 
-        } while(!(network.isConnected()));
+        } while (!(network.isConnected()));
 
         return network;
     }
@@ -261,10 +279,12 @@ public class SensorNetwork implements Network {
     }
 
     /**
-     * Tests whether all the nodes are directly or indirectly connected with each other.
+     * Tests whether all the nodes are directly or indirectly connected with each
+     * other.
      *
-     * @return true if and only if all the nodes are directly or indirectly connected
-     * with each other; otherwise false
+     * @return true if and only if all the nodes are directly or indirectly
+     *         connected
+     *         with each other; otherwise false
      */
     @Override
     public boolean isConnected() {
@@ -272,10 +292,12 @@ public class SensorNetwork implements Network {
     }
 
     /**
-     * Tests whether there is enough storage for all the overflow packets in the network.
+     * Tests whether there is enough storage for all the overflow packets in the
+     * network.
      *
-     * @return true if and only if there is enough storage for all the overflow packets in the network;
-     * otherwise false
+     * @return true if and only if there is enough storage for all the overflow
+     *         packets in the network;
+     *         otherwise false
      */
     @Override
     public boolean isFeasible() {
@@ -301,11 +323,13 @@ public class SensorNetwork implements Network {
     }
 
     /**
-     * Returns the sensor nodes in the min-cost path between the from and to sensor nodes
+     * Returns the sensor nodes in the min-cost path between the from and to sensor
+     * nodes
      *
      * @param from the starting sensor node
-     * @param to the ending sensor node
-     * @return a list of the sensor nodes in the min-cost path between the from and to sensor nodes
+     * @param to   the ending sensor node
+     * @return a list of the sensor nodes in the min-cost path between the from and
+     *         to sensor nodes
      */
     @Override
     public List<SensorNode> getMinCostPath(SensorNode from, SensorNode to) {
@@ -314,6 +338,7 @@ public class SensorNetwork implements Network {
 
     /**
      * Calculates the cost of a given path.
+     * 
      * @param path the path between two sensor nodes
      * @return the cost of the given path
      */
@@ -336,9 +361,9 @@ public class SensorNetwork implements Network {
         File file = new File(fileName);
 
         try (PrintWriter pw = new PrintWriter(file)) {
-            pw.printf("%f %f %f\n", this.getWidth(), this.getLength(), this.transmissionRange);   // X, Y, Tr
-            pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity);  // q m
-            pw.printf("%d %d\n", this.nodes.size(), this.batteryCapacity);     // N c
+            pw.printf("%f %f %f\n", this.getWidth(), this.getLength(), this.transmissionRange); // X, Y, Tr
+            pw.printf("%d %d\n", this.dataPacketCount, this.storageCapacity); // q m
+            pw.printf("%d %d\n", this.nodes.size(), this.batteryCapacity); // N c
 
             for (SensorNode n : this.nodes) {
                 pw.printf("%s %f %f\n", (n instanceof DataNode) ? 'd' : 's', n.getX(), n.getY());
@@ -376,9 +401,304 @@ public class SensorNetwork implements Network {
         return this.getNeighbors(sensorNode1).contains(sensorNode2);
     }
 
+    /*
+     * Checks if the max flow network is feasible
+     * uses google OR-tools linear solver to solve ILP model
+     * google OR-tools linear solver:
+     * https://developers.google.com/optimization/mip/
+     */
+    @Override
+    public boolean isMaxFlowFeasible() {
+
+        int infinity = java.lang.Integer.MAX_VALUE;
+        int n = this.nodes.size();
+        int sink = 2 * n + 1;
+        Loader.loadNativeLibraries();
+        MPSolver solver = MPSolver.createSolver("GLOP");
+        MPVariable[][] x = new MPVariable[2 * n + 2][2 * n + 2];
+
+        // create 2d array of decision variable x
+        // x_i_j value represents number of flows from i to j
+
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x[i].length; j++) {
+                x[i][j] = solver.makeIntVar(0, infinity, "x_" + i + "_" + j);
+            }
+        }
+        // if i has no edge to j, x_i_j=0
+        makeMaxFlowEdges(x, solver);
+
+        // constraint (4):
+        // indicates the maximum number of packets data node i can offload is di, the
+        // initial number of data packets data node i has
+        MPConstraint[] four = new MPConstraint[this.dNodes.size()];
+        int constraint = 0;
+        for (DataNode dn : this.dNodes) {
+            four[constraint] = solver.makeConstraint(-infinity, this.dataPacketCount, "" + dn.getUuid());
+            four[constraint].setCoefficient(x[0][dn.getUuid()], 1);
+            constraint++;
+        }
+
+        // constraint (5):
+        // indicates the maximum number of packets storage node i can store is mi, the
+        // storage capacity of storage node i
+        MPConstraint[] five = new MPConstraint[this.sNodes.size()];
+        constraint = 0;
+        for (StorageNode sn : this.sNodes) {
+            five[constraint] = solver.makeConstraint(-infinity, this.storageCapacity, "" + (sn.getUuid() + n));
+            five[constraint].setCoefficient(x[sn.getUuid() + n][sink], 1);
+            constraint++;
+        }
+
+        // constraint (6):
+        // the flow conservation for data nodes, where the number of its own data
+        // packets offloaded plus the number of data packets it relays for other data
+        // nodes equals the number of data packets it transmits.
+        MPConstraint[] six = new MPConstraint[this.dNodes.size()];
+        constraint = 0;
+        for (DataNode dn : this.dNodes) {
+            six[constraint] = solver.makeConstraint(0, 0);
+            six[constraint].setCoefficient(x[0][dn.getUuid()], 1);
+            for (SensorNode sn : this.nodes) {
+                six[constraint].setCoefficient(x[sn.getUuid()][dn.getUuid()], 1);
+                six[constraint].setCoefficient(x[sn.getUuid() + n][dn.getUuid()], 1);
+
+                six[constraint].setCoefficient(x[dn.getUuid() + n][sn.getUuid()], -1);
+                six[constraint].setCoefficient(x[dn.getUuid() + n][sn.getUuid() + n], -1);
+            }
+            constraint++;
+        }
+
+        // constraint (7):
+        // the flow conservation for storage nodes, which says that data packets a
+        // storage node receives are either relayed to other nodes or stored by this
+        // storage node
+        MPConstraint[] seven = new MPConstraint[this.sNodes.size()];
+        constraint = 0;
+        for (StorageNode sn : this.sNodes) {
+            seven[constraint] = solver.makeConstraint(0, 0);
+            seven[constraint].setCoefficient(x[sn.getUuid() + n][sink], -1);
+            for (SensorNode snp : this.nodes) {
+                seven[constraint].setCoefficient(x[snp.getUuid()][sn.getUuid()], 1);
+                seven[constraint].setCoefficient(x[snp.getUuid() + n][sn.getUuid()], 1);
+
+                seven[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid()], -1);
+                seven[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid() + n], -1);
+            }
+            constraint++;
+        }
+
+        // constraint(8):
+        // (8) and (9) represents the energy constraints for data nodes and storage
+        // nodes respectively
+        // in our work we don't consider the storage cost, so its just one constraint
+        MPConstraint[] eight = new MPConstraint[this.nodes.size()];
+        constraint = 0;
+        for (SensorNode sn : this.nodes) {
+            eight[constraint] = solver.makeConstraint(-infinity, sn.getEnergy());
+            for (SensorNode snp : this.nodes) {
+                if (snp.getUuid() == sn.getUuid()) {
+                    continue;
+                }
+                eight[constraint].setCoefficient(x[snp.getUuid()][sn.getUuid()], sn.calculateReceivingCost());
+                eight[constraint].setCoefficient(x[snp.getUuid() + n][sn.getUuid()], sn.calculateReceivingCost());
+
+                eight[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid()],
+                        sn.calculateTransmissionCost(snp));
+                eight[constraint]
+                        .setCoefficient(x[sn.getUuid() + n][snp.getUuid() + n], sn.calculateTransmissionCost(snp));
+
+            }
+            constraint++;
+        }
+
+        // set Objective, (maximize flow from source to data in nodes)
+        MPObjective objective = solver.objective();
+        for (DataNode dn : this.dNodes) {
+            objective.setCoefficient(x[0][dn.getUuid()], 1);
+        }
+        objective.setMaximization();
+
+        // solve
+        final MPSolver.ResultStatus resultStatus = solver.solve();
+
+        // if objective value equals the total number of data packets to be offloaded,
+        // then problem is feasible
+        System.out.println(
+                "Objective: " + objective.value() + " data packet count: " + this.dNodes.size() * dataPacketCount);
+        if (objective.value() == this.dNodes.size() * dataPacketCount) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    private void makeMaxFlowEdges(MPVariable[][] x, MPSolver solver) {
+
+        // make all edges from the source node to every node that is NOT a data in-node
+        // capacity 0
+        int n = this.nodes.size();
+        int sink = 2 * n + 1;
+        MPConstraint c = solver.makeConstraint(0.0, 0.0, "no Edge from i to j");
+        for (SensorNode sn : this.nodes) {
+            if (!(sn instanceof DataNode)) {
+                // storage in-node
+                c.setCoefficient(x[0][sn.getUuid()], 1);
+                // storage out-node
+                c.setCoefficient(x[0][sn.getUuid() + n], 1);
+            } else {
+                // data out-node
+                c.setCoefficient(x[0][sn.getUuid() + n], 1);
+
+            }
+        }
+        // sink node
+        c.setCoefficient(x[0][sink], 1);
+
+        // make all edges from the data in-nodes to every node that is NOT its
+        // respective out-node capacity 0
+
+        for (DataNode dn : this.dNodes) {
+
+            // source node
+            c.setCoefficient(x[dn.getUuid()][0], 1);
+
+            // other data in-nodes
+            for (DataNode dnp : this.dNodes) {
+                if (dnp.getUuid() == dn.getUuid()) {
+                    continue;
+                }
+                c.setCoefficient(x[dn.getUuid()][dnp.getUuid()], 1);
+                // all other data out-nodes
+                c.setCoefficient(x[dn.getUuid()][dnp.getUuid() + n], 1);
+            }
+
+            // storage nodes
+            for (StorageNode sn : this.sNodes) {
+                // in-node
+                c.setCoefficient(x[dn.getUuid()][sn.getUuid()], 1);
+                // out-node
+                c.setCoefficient(x[dn.getUuid()][sn.getUuid() + n], 1);
+            }
+            // sink node
+            c.setCoefficient(x[dn.getUuid()][sink], 1);
+        }
+
+        // make all edges from data out-node to:
+        // source capacity 0 (1)
+        // its respective in-node capacity 0 (2)
+        // any data in-node it is NOT directly connected to capacity 0 (3)
+        // any other data out-node capacity 0 (4)
+        // any storage in- node it is not directly connected to capacity 0 (5)
+        // every storage out-node capacity 0 (6)
+        // sink capacity 0 (7)
+        for (DataNode dn : this.dNodes) {
+            // (1)
+            c.setCoefficient(x[dn.getUuid() + n][0], 1);
+            // (2)
+            c.setCoefficient(x[dn.getUuid() + n][dn.getUuid()], 1);
+            for (DataNode dnp : this.dNodes) {
+                if (dn.getUuid() == dnp.getUuid()) {
+                    continue;
+                }
+                if (!isConnected(dnp, dn)) {
+                    // (3)
+                    c.setCoefficient(x[dn.getUuid() + n][dnp.getUuid()], 1);
+                }
+                // (4)
+                c.setCoefficient(x[dn.getUuid() + n][dnp.getUuid() + n], 1);
+            }
+            for (StorageNode sn : this.sNodes) {
+                if (!isConnected(sn, dn)) {
+                    // (5)
+                    c.setCoefficient(x[dn.getUuid() + n][sn.getUuid()], 1);
+                }
+                // (6)
+                c.setCoefficient(x[dn.getUuid() + n][sn.getUuid() + n], 1);
+            }
+            // (7)
+            c.setCoefficient(x[dn.getUuid() + n][sink], 1);
+        }
+
+        // make all edges from storage in-nodes to any other node that is not its
+        // respective out-node capacity 0
+        for (StorageNode sn : this.sNodes) {
+            // source node
+            c.setCoefficient(x[sn.getUuid()][0], 1);
+
+            for (DataNode dn : this.dNodes) {
+                // data nodes
+                // in-nodes
+                c.setCoefficient(x[sn.getUuid()][dn.getUuid()], 1);
+                // out-nodes
+                c.setCoefficient(x[sn.getUuid()][dn.getUuid() + n], 1);
+            }
+
+            for (StorageNode snp : this.sNodes) {
+                if (snp.getUuid() == sn.getUuid()) {
+                    continue;
+                }
+                // other storage in-nodes
+                c.setCoefficient(x[sn.getUuid()][snp.getUuid()], 1);
+                // all other storage out-nodes
+                c.setCoefficient(x[sn.getUuid()][snp.getUuid() + n], 1);
+            }
+            // sink
+            c.setCoefficient(x[sn.getUuid()][sink], 1);
+        }
+        // make all edges from storage out-nodes to
+        // source node capacity 0
+        // data in-nodes that it is not directly connected to capacity 0
+        // data out-nodes capacity 0
+        // its respective storage in-node capcity 0
+        // all other storage in-nodes it is not connected to capacity 0
+        // all other other storage out-nodes capacity 0
+        for (StorageNode sn : this.sNodes) {
+            // source
+            c.setCoefficient(x[sn.getUuid() + n][0], 1);
+            for (DataNode dn : this.dNodes) {
+                if (!isConnected(dn, sn)) {
+                    // data in-nodes it is not connected to directly
+                    c.setCoefficient(x[sn.getUuid() + n][dn.getUuid()], 1);
+                }
+                // data out-nodes
+                c.setCoefficient(x[sn.getUuid() + n][dn.getUuid() + n], 1);
+            }
+            // its respective in-node
+            c.setCoefficient(x[sn.getUuid() + n][sn.getUuid()], 1);
+
+            for (StorageNode snp : this.sNodes) {
+                if (snp.getUuid() == sn.getUuid()) {
+                    continue;
+                }
+                if (!isConnected(sn, snp)) {
+                    // storage in-node it is not directly connected to
+                    c.setCoefficient(x[sn.getUuid() + n][snp.getUuid()], 1);
+                }
+                // all other storage out-nodes
+                c.setCoefficient(x[sn.getUuid() + n][snp.getUuid() + n], 1);
+            }
+        }
+        // make all edges from the sink node to any other node capacity 0
+        // source
+        c.setCoefficient(x[sink][0], 1);
+        // sensor in and out-nodes
+        for (SensorNode sn : this.nodes) {
+            c.setCoefficient(x[sink][sn.getUuid()], 1);
+            c.setCoefficient(x[sink][sn.getUuid() + n], 1);
+        }
+        // finally if i==j, x[i][j]=0
+        for (int i = 0; i < x.length; i++) {
+            c.setCoefficient(x[i][i], 1);
+        }
+
+    }
+
     /**
      * Saves the network in the <b>DIMAC</b> format
-     * that can be used for the min-cost flow program <a href="https://github.com/iveney/cs2">CS2</a>.
+     * that can be used for the min-cost flow program
+     * <a href="https://github.com/iveney/cs2">CS2</a>.
      *
      * @param fileName the path to the file to save to
      */
@@ -498,7 +818,7 @@ public class SensorNetwork implements Network {
             sn.setCapacity(storageCapacity);
         }
     }
-    
+
     public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
         for (SensorNode n : this.nodes) {
@@ -517,9 +837,7 @@ public class SensorNetwork implements Network {
             throw new IllegalArgumentException(
                     String.format("Cannot send from %s (%d/%d packets left) -> %s (%d/%d space left)\n",
                             dn.getName(), dn.getPacketsLeft(), this.dataPacketCount,
-                            sn.getName(), sn.getSpaceLeft(), this.storageCapacity
-                    )
-            );
+                            sn.getName(), sn.getSpaceLeft(), this.storageCapacity));
         }
 
         dn.removePackets(packets);
