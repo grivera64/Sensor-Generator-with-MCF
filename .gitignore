@@ -32,3 +32,5 @@ bin/
 *.inp
 sensor_network.png
 *.sn
+
+.idea/
