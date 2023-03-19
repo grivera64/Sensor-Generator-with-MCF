@@ -164,7 +164,7 @@ public class SensorToFlowNetworkMain extends Application {
                 else if (command.matches("^\\d+")) {
                     n1 = network.getDataNodes().get(Integer.parseInt(command) - 1);
                 } else if (command.matches("DN\\d+")) {
-                    n1 = network.getDataNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                    n1 = network.getDataNodes().get(Integer.parseInt(command.substring(2)) - 1);
                 } else {
                     System.out.println("Invalid input! Please try again...\n");
                     continue;
@@ -183,7 +183,7 @@ public class SensorToFlowNetworkMain extends Application {
                 } else if (command.matches("^\\d+")) {
                     n2 = network.getStorageNodes().get(Integer.parseInt(command) - 1);
                 } else if (command.matches("SN\\d+")) {
-                    n2 = network.getStorageNodes().get(Integer.parseInt(command.substring(3)) - 1);
+                    n2 = network.getStorageNodes().get(Integer.parseInt(command.substring(2)) - 1);
                 } else {
                     System.out.println("Invalid input! Please try again...\n");
                     continue;
