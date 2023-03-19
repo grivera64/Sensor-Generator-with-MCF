@@ -7,9 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="JavaFX-17.0.0.1" level="application" />
-    <orderEntry type="library" exported="" name="ortools-java-9.5.2237-sources" level="application" />
+    <orderEntry type="library" exported="" name="Sensor-Generator-with-MCF" level="project" />
     <orderEntry type="library" exported="" name="jna-5.13.0" level="application" />
+    <orderEntry type="library" exported="" name="ortools-java-9.5.2237-sources" level="application" />
     <orderEntry type="library" exported="" name="protobuf-java-4.0.0-rc-2" level="application" />
   </component>
 </module>
