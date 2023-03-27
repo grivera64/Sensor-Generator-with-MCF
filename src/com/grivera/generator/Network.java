@@ -25,6 +25,7 @@ public interface Network {
     int calculateCostOfPath(List<SensorNode> path);
     void save(String fileName);
     void saveAsCsInp(String fileName);
+    int getMinCostIlp();
     boolean isMaxFlowFeasible();
     void setOverflowPackets(int overflowPackets);
     void setStorageCapacity(int storageCapacity);

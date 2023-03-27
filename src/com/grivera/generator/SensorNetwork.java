@@ -402,6 +402,226 @@ public class SensorNetwork implements Network {
     }
 
     /*
+     * Calculates MCF using ILP with google OR-tools
+     *
+     */
+    @Override
+    public int getMinCostIlp() {
+        int infinity = java.lang.Integer.MAX_VALUE;
+        int n = this.nodes.size();
+        int sink = 2 * n + 1;
+        Loader.loadNativeLibraries();
+        MPSolver solver = MPSolver.createSolver("GLOP");
+        MPVariable[][] x = new MPVariable[2 * n + 2][2 * n + 2];
+        int[][] c = new int[2 * n + 2][2 * n + 2];
+
+        // create 2d array of decision variable x
+        // x_i_j value represents number of flows from i to j
+
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x[i].length; j++) {
+                x[i][j] = solver.makeIntVar(0, infinity, "x_" + i + "_" + j);
+            }
+        }
+        // if i has no edge to j, x_i_j=0
+        makeMaxFlowEdges(x, solver);
+        makeCostArray(c);
+        // constraint (11):
+        // indicates the maximum number of packets data node i can offload is di, the
+        // initial number of data packets data node i has
+        MPConstraint[] eleven = new MPConstraint[this.dNodes.size()];
+        int constraint = 0;
+        for (DataNode dn : this.dNodes) {
+            eleven[constraint] = solver.makeConstraint(this.dataPacketCount, this.dataPacketCount, "" + dn.getUuid());
+            eleven[constraint].setCoefficient(x[0][dn.getUuid()], 1);
+            // eleven[constraint].setCoefficient(solver.makeIntConst(this.dataPacketCount),
+            // -1);
+            constraint++;
+        }
+
+        // constraint (5):
+        // indicates the maximum number of packets storage node i can store is mi, the
+        // storage capacity of storage node i
+        MPConstraint[] five = new MPConstraint[this.sNodes.size()];
+        constraint = 0;
+        for (StorageNode sn : this.sNodes) {
+            five[constraint] = solver.makeConstraint(-infinity, this.storageCapacity, "" + (sn.getUuid() + n));
+            five[constraint].setCoefficient(x[sn.getUuid() + n][sink], 1);
+            constraint++;
+        }
+
+        // constraint (6):
+        // the flow conservation for data nodes, where the number of its own data
+        // packets offloaded plus the number of data packets it relays for other data
+        // nodes equals the number of data packets it transmits.
+        MPConstraint[] six = new MPConstraint[this.dNodes.size()];
+        constraint = 0;
+        for (DataNode dn : this.dNodes) {
+            six[constraint] = solver.makeConstraint(0, 0);
+            six[constraint].setCoefficient(x[0][dn.getUuid()], 1);
+            for (SensorNode sn : this.nodes) {
+                six[constraint].setCoefficient(x[sn.getUuid()][dn.getUuid()], 1);
+                six[constraint].setCoefficient(x[sn.getUuid() + n][dn.getUuid()], 1);
+
+                six[constraint].setCoefficient(x[dn.getUuid() + n][sn.getUuid()], -1);
+                six[constraint].setCoefficient(x[dn.getUuid() + n][sn.getUuid() + n], -1);
+            }
+            constraint++;
+        }
+
+        // constraint (7):
+        // the flow conservation for storage nodes, which says that data packets a
+        // storage node receives are either relayed to other nodes or stored by this
+        // storage node
+        MPConstraint[] seven = new MPConstraint[this.sNodes.size()];
+        constraint = 0;
+        for (StorageNode sn : this.sNodes) {
+            seven[constraint] = solver.makeConstraint(0, 0);
+            seven[constraint].setCoefficient(x[sn.getUuid() + n][sink], -1);
+            for (SensorNode snp : this.nodes) {
+                seven[constraint].setCoefficient(x[snp.getUuid()][sn.getUuid()], 1);
+                seven[constraint].setCoefficient(x[snp.getUuid() + n][sn.getUuid()], 1);
+
+                seven[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid()], -1);
+                seven[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid() + n], -1);
+            }
+            constraint++;
+        }
+
+        // constraint(8):
+        // (8) and (9) represents the energy constraints for data nodes and storage
+        // nodes respectively
+        // in our work we don't consider the storage cost, so its just one constraint
+        MPConstraint[] eight = new MPConstraint[this.nodes.size()];
+        constraint = 0;
+        for (SensorNode sn : this.nodes) {
+            eight[constraint] = solver.makeConstraint(-infinity, sn.getEnergy());
+            for (SensorNode snp : this.nodes) {
+                if (snp.getUuid() == sn.getUuid()) {
+                    continue;
+                }
+                eight[constraint].setCoefficient(x[snp.getUuid()][sn.getUuid()], sn.calculateReceivingCost());
+                eight[constraint].setCoefficient(x[snp.getUuid() + n][sn.getUuid()], sn.calculateReceivingCost());
+
+                eight[constraint].setCoefficient(x[sn.getUuid() + n][snp.getUuid()],
+                        sn.calculateTransmissionCost(snp));
+                eight[constraint]
+                        .setCoefficient(x[sn.getUuid() + n][snp.getUuid() + n], sn.calculateTransmissionCost(snp));
+
+            }
+            constraint++;
+        }
+
+        // set Objective, (maximize flow from source to data in nodes)
+        /*
+         * MPObjective objective = solver.objective();
+         * for (DataNode dn : this.dNodes) {
+         * objective.setCoefficient(x[0][dn.getUuid()], 1);
+         * }
+         * objective.setMaximization();
+         */
+
+        // set Objective, (minimize dvar * cost)
+        MPObjective objective = solver.objective();
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x[i].length; j++) {
+                objective.setCoefficient(x[i][j], c[i][j]);
+            }
+        }
+        objective.setMinimization();
+
+        // solve
+        final MPSolver.ResultStatus resultStatus = solver.solve();
+
+        // return value for objective
+        if (resultStatus == MPSolver.ResultStatus.OPTIMAL) {
+            System.out.println("Objective value: " + objective.value());
+            return (int) objective.value();
+        }
+        // if result not optimal, it will return -99;
+        // I don't think it should ever return -99;
+        return -99;
+        /*
+         * System.out.println(
+         * "Objective: " + objective.value() + " data packet count: " +
+         * this.dNodes.size() * dataPacketCount);
+         * if (objective.value() == this.dNodes.size() * dataPacketCount) {
+         * return true;
+         * }
+         * 
+         * return false;
+         */
+
+    }
+
+    private void makeCostArray(int[][] c) {
+        int infinity = java.lang.Integer.MAX_VALUE;
+        int n = this.nodes.size();
+        int sink = 2 * n + 1;
+        // first set default cost value as infinity
+        for (int i = 0; i < c.length; i++) {
+            for (int j = 0; j < c[i].length; j++) {
+                c[i][j] = infinity;
+            }
+        }
+        // calculate cost from source to data in nodes (0)
+        for (DataNode dn : this.dNodes) {
+            c[0][dn.getUuid()] = 0;
+        }
+        // calculate cost from in-node to respective out-node
+        for (DataNode dn : this.dNodes) {
+            c[dn.getUuid()][dn.getUuid() + n] = 0;
+        }
+        // calculate cost from data out-nodes to data in-nodes and storage in-nodes
+        for (DataNode dn : this.dNodes) {
+            for (DataNode dnp : this.dNodes) {
+                if (dn.getUuid() == dnp.getUuid()) {
+                    continue;
+                }
+                if (isConnected(dnp, dn)) {
+                    int tCost = dn.calculateTransmissionCost(dnp);
+                    int rCost = dnp.calculateReceivingCost();
+                    c[dn.getUuid() + n][dnp.getUuid()] = tCost + rCost;
+                }
+            }
+            for (StorageNode sn : this.sNodes) {
+                if (isConnected(sn, dn)) {
+                    int tCost = dn.calculateTransmissionCost(sn);
+                    int rCost = sn.calculateReceivingCost();
+                    c[dn.getUuid() + n][sn.getUuid()] = tCost + rCost;
+                }
+            }
+        }
+        // calculate cost from storage in-nodes to respective out-node;
+        for (StorageNode sn : this.sNodes) {
+            c[sn.getUuid()][sn.getUuid() + n] = 0;
+        }
+        // calculate cost from storage out-nodes to data in-nodes and storage in-nodes
+        for (StorageNode sn : this.sNodes) {
+            for (StorageNode snp : this.sNodes) {
+                if (sn.getUuid() == snp.getUuid()) {
+                    continue;
+                }
+                if (isConnected(sn, snp)) {
+                    int tCost = sn.calculateTransmissionCost(snp);
+                    int rCost = snp.calculateReceivingCost();
+                    c[sn.getUuid() + n][snp.getUuid()] = tCost + rCost;
+                }
+            }
+            for (DataNode dn : this.dNodes) {
+                if (isConnected(dn, sn)) {
+                    int tCost = sn.calculateTransmissionCost(dn);
+                    int rCost = dn.calculateReceivingCost();
+                    c[sn.getUuid() + n][dn.getUuid()] = tCost + rCost;
+                }
+            }
+            // calculate cost from storage out-nodes to sink (0)
+            c[sn.getUuid() + n][sink] = 0;
+        }
+
+    }
+
+    /*
      * Checks if the max flow network is feasible
      * uses google OR-tools linear solver to solve ILP model
      * google OR-tools linear solver:
