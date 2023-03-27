@@ -535,7 +535,7 @@ public class SensorNetwork implements Network {
 
         // return value for objective
         if (resultStatus == MPSolver.ResultStatus.OPTIMAL) {
-            System.out.println("Objective value: " + objective.value());
+            System.out.printf("Objective value: %f micro J\n", objective.value());
             return (int) objective.value();
         }
         // if result not optimal, it will return -99;
@@ -744,14 +744,10 @@ public class SensorNetwork implements Network {
 
         // if objective value equals the total number of data packets to be offloaded,
         // then problem is feasible
-        System.out.println(
-                "Objective: " + objective.value() + " data packet count: " + this.dNodes.size() * dataPacketCount);
-        if (objective.value() == this.dNodes.size() * dataPacketCount) {
-            return true;
-        }
-
-        return false;
-
+        System.out.printf(
+                "Objective: %f data packet count: %d\n", objective.value(), this.dNodes.size() * dataPacketCount
+        );
+        return objective.value() == this.dNodes.size() * dataPacketCount;
     }
 
     private void makeMaxFlowEdges(MPVariable[][] x, MPSolver solver) {
