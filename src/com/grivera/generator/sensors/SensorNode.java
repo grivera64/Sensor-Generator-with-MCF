@@ -91,7 +91,15 @@ public abstract class SensorNode {
         this.energy = this.batteryCapacity;
     }
 
+    /**
+     * Tests if this Sensor Node has enough energy to transmit at least 1 data packet directly to a receiving Sensor Node.
+     * @return true if and only if this Sensor Node is close enough and has enough energy
+     * to transmit at least 1 data packet; otherwise false
+     */
     public boolean canTransmit(SensorNode receiverNode) {
+        if (!this.inRangeOf(receiverNode)) {
+            return false;
+        }
         return this.calculateTransmissionCost(receiverNode) <= this.energy;
     }
 
@@ -106,6 +114,11 @@ public abstract class SensorNode {
         return (int) Math.round(cost * Math.pow(10, 6));
     }
 
+    /**
+     * Tests if this Sensor Node has enough energy to receive at least 1 data packet for storing/relaying.
+     * @return true if and only if this Sensor Node has enough energy to receive at least 1 data packet;
+     * otherwise false
+     */
     public boolean canReceive() {
         return this.calculateReceivingCost() <= this.energy;
     }
