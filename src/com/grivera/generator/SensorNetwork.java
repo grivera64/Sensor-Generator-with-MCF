@@ -975,6 +975,10 @@ public class SensorNetwork implements Network {
     }
 
     private List<SensorNode> bfs(Map<SensorNode, Set<SensorNode>> graph, SensorNode start, SensorNode end) {
+        if (!start.hasEnergy() || !start.hasEnergy()) {
+            throw new IllegalArgumentException("Cannot traverse from or to nodes that do not have energy.");
+        }
+
         Queue<Tuple<SensorNode, Integer, SensorNode>> q = new PriorityQueue<>(Comparator.comparing(Tuple::second));
         Map<SensorNode, SensorNode> backPointers = new HashMap<>();
         q.offer(Tuple.of(start, 0, null));
@@ -992,6 +996,10 @@ public class SensorNetwork implements Network {
             if (!backPointers.containsKey(curr)) {
                 backPointers.put(curr, prev);
                 for (SensorNode neighbor : graph.getOrDefault(curr, Set.of())) {
+                    /* Skip over Neighbors that can't receive data packets from the current node */
+                    if (!curr.canTransmit(neighbor) || !neighbor.canReceive()) {
+                        continue;
+                    }
                     q.offer(Tuple.of(neighbor, value + this.getCost(curr, neighbor), curr));
                 }
             }
@@ -1003,11 +1011,16 @@ public class SensorNetwork implements Network {
 
         LinkedList<SensorNode> deque = new LinkedList<>();
         curr = end;
-        while (curr != null) {
+        while (curr != null && curr != start) {
             deque.push(curr);
             curr = backPointers.getOrDefault(curr, null);
         }
 
+        if (!start.equals(curr)) {
+            throw new RuntimeException("BFS (Dijkstra's) failed to find path!");
+        }
+
+        deque.push(curr);
         return deque;
     }
 

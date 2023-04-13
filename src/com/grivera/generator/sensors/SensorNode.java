@@ -92,6 +92,18 @@ public abstract class SensorNode {
     }
 
     /**
+     * Tests if this Sensor Node has enough energy to transmit at least 1 data packet directly to a receiving Sensor Node.
+     * @return true if and only if this Sensor Node is close enough and has enough energy
+     * to transmit at least 1 data packet; otherwise false
+     */
+    public boolean canTransmit(SensorNode receiverNode) {
+        if (!this.inRangeOf(receiverNode)) {
+            return false;
+        }
+        return this.calculateTransmissionCost(receiverNode) <= this.energy;
+    }
+
+    /**
      * Calculates the cost to transmit/relay a data packet from this Sensor Node to a specified receiver Sensor Node
      *
      * @param receiverNode the Sensor Node that this Sensor Node would transmit/relay one data packet to
@@ -100,6 +112,15 @@ public abstract class SensorNode {
     public int calculateTransmissionCost(SensorNode receiverNode) {
         double cost = BITS_PER_PACKET * (E_elec + E_amp * Math.pow(this.distanceTo(receiverNode), 2));
         return (int) Math.round(cost * Math.pow(10, 6));
+    }
+
+    /**
+     * Tests if this Sensor Node has enough energy to receive at least 1 data packet for storing/relaying.
+     * @return true if and only if this Sensor Node has enough energy to receive at least 1 data packet;
+     * otherwise false
+     */
+    public boolean canReceive() {
+        return this.calculateReceivingCost() <= this.energy;
     }
 
     /**
