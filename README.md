@@ -210,6 +210,10 @@ a 7 11 0 2 0
   
 - Sensor Generator with Max Profit ([grivera64/Sensor-Generator-with-Max-Profit](https://github.com/grivera64/Sensor-Generator-with-Max-Profit))
   - Reimplementation of [grivera64/SensorGenerator-with-MCF](https://github.com/grivera64/Sensor-Generator-with-MCF) for maximizing profit in data preservation.
+  - By Giovanni Rivera ([@grivera64](https://github.com/grivera64))
+ 
+- Max Profit Data Preservation Simulation ([grivera64/Max-Profit-Data-Preservation-Simulation](https://github.com/grivera64/Max-Profit-Data-Preservation-Simulation))
+  - Reimplementation of [grivera64/Data-Preservation-Simulation](https://github.com/grivera64/Data-Preservation-Simulation) for maximizing profit in data preservation.
   - By Giovanni Rivera ([@grivera64](https://github.com/grivera64)) & Christopher Gonzalez ([@chrisagonza97](https://github.com/chrisagonza97))
 
 ## Author
