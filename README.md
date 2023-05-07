@@ -207,6 +207,10 @@ a 7 11 0 2 0
 - Data Preservation Simulation ([grivera64/Data-Preservation-Simulation](https://github.com/grivera64/Data-Preservation-Simulation))
   - A simulation for testing data preservation of base station-less networks (BSNs).
   - By Giovanni Rivera ([@grivera64](https://github.com/grivera64)) 
+  
+- Sensor Generator with Max Profit ([grivera64/Sensor-Generator-with-Max-Profit](https://github.com/grivera64/Sensor-Generator-with-Max-Profit))
+  - Reimplementation of [grivera64/SensorGenerator-with-MCF](https://github.com/grivera64/Sensor-Generator-with-MCF) for maximizing profit in data preservation.
+  - By Giovanni Rivera ([@grivera64](https://github.com/grivera64)) & Christopher Gonzalez ([@chrisagonza97](https://github.com/chrisagonza97))
 
 ## Author
 
