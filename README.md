@@ -20,10 +20,10 @@ Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
 
 ---
 This program generates, loads, and visualizes a sensor network and produces its flow network in **DIMAC** format for usage in
-Golberg's and Cherkassky's CS2 program from the paper "An Efficient Implementation of a Scaling Minimum-Cost Flow
+Goldberg's and Cherkassky's CS2 program from the paper "An Efficient Implementation of a Scaling Minimum-Cost Flow
 Algorithm" by A.V. Goldberg, J. Algorithms, Vol. 22 (1997), pp. 1--29.
 
-This program can also be used to run different strategies for sending data packets (View in [Related Projects](#related-projects)).
+This program can also be used to run different strategies for sending data packets, such as in [grivera64/Data-Preservation-Simulation](https://github.com/grivera64/Data-Preservation-Simulation). (View in [Related Projects](#related-projects)). It was used in the published paper, "Nash Equilibria of Data Preservation in Base Station-less Sensor Networks" by Giovanni Rivera, Yutian Chen, and Bin Tang. You can view the paper [here](https://scholarworks.calstate.edu/concern/publications/vx021n445).
 
 ## Setup
 
