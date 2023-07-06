@@ -13,8 +13,8 @@ Sensor Network generator and visualizer for CS2 Min-Cost Flow input.
   - [Generated Sensor Network](#generated-sensor-network)
   - [Min-cost Path from DN03 to SN01](#min-cost-path-from-dn03-to-sn01)
   - [output_sensor_flow_diagram.inp](#outputsensorflowdiagraminp)
-- [Author](#author)
 - [Related Projects](#related-projects)
+- [Author](#author)
 
 ## About
 
